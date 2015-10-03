@@ -20,8 +20,8 @@
 
     $app->get('/api/tarif', function() use ($app) {
         $app->response->headers->set('Content-Type', 'application/json');
-        TarifQuery::create()
-            ->filterByTime()
+        //TarifQuery::create()
+            //->filterByTime();
 
     })->name("tarif");
 
