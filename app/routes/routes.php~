@@ -31,7 +31,7 @@
 
         $response = [
 	'Radiateur' => round(rand(0, 100)/100 * 1500),
-	'Ballon 100L' => round(rand(0, 100):100 * 2500),
+	'Ballon 100L' => round(rand(0, 100)/100 * 2500),
 	'Réfrigérateur' => round(rand(0, 100)/100 * 200),
 	'Congélateur' => round(rand(0, 100)/100 * 275),
 	'Lave-vaisselle' => round(rand(0, 100)/100 * 1200),
@@ -48,7 +48,7 @@
         ];
         echo json_encode($response);
 
-    })->name("jposte_conso");
+    })->name("postes_conso");
 
     $app->get('/api/tarif', function() use ($app) {
         $app->response->headers->set('Content-Type', 'application/json');

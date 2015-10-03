@@ -48,7 +48,7 @@
         ];
         echo json_encode($response);
 
-    })->name("jposte_conso");
+    })->name("postes_conso");
 
     $app->get('/api/tarif', function() use ($app) {
         $app->response->headers->set('Content-Type', 'application/json');
