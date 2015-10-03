@@ -1,0 +1,34 @@
+{% extends "layout.html.twig" %}
+{% block body %}
+
+{% if flash['success'] is defined %}
+  <div class="alert alert-success" role="alert">{{ flash['success'] }}</div>
+{% endif %}
+{% if flash['error'] is defined %}
+  <div class="alert alert-danger" role="alert">{{ flash['error'] }}</div>
+{% endif %}
+
+<form class="form-horizontal" method="post" action="{{ urlFor('user_post') }}">
+  <input type="hidden" name="id" value="{{ user.id }}">
+  {{ input_tag('firstName', 'Prénom', user.firstName, errors, 'user.first_name') }}
+  {{ input_tag('lastName', 'Nom', user.lastName, errors, 'user.last_name') }}
+  {{ input_tag('email', 'E-mail', user.email, errors, 'user.email', 'mail') }}
+  {{ input_tag('phoneNumber', 'Téléphone', user.phoneNumber, errors, 'user.phone_number') }}
+  {{ select_tag('role', 'Rôle', roles, user.role, errors, 'user.phone_number') }}
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" name="generatePassword"> Générer un mot de passe et l'envoyer par mail
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-default">Enregistrer</button>
+    </div>
+  </div>
+</form>
+
+{% endblock %}

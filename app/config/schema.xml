@@ -1,0 +1,87 @@
+<!--
+    Awesome, your propel set up is nearly done! You just have to describe how you want your database to look like.
+
+    You can let propel set up your mysql database by running `vendor/bin/propel database:create && vendor/bin/propel database:insert-sql`.
+    This will create your database including all the tables.
+-->
+
+<!--
+    The root tag of the XML schema is the <database> tag.
+
+    The `name` attribute defines the name of the connection that Propel uses for the tables in this schema. It is not
+    necessarily the name of the actual database. In fact, Propel uses some configuration properties to link a connection
+    name with real connection settings (like database name, user and password).
+
+    The `defaultIdMethod` attribute indicates that the tables in this schema use the database's "native"
+    auto-increment/sequence features to handle id columns that are set to auto-increment.
+
+   [TIP]: You can define several schemas for a single project. Just make sure that each of the schema
+          filenames end with schema.xml.
+-->
+<database name="code2be" defaultIdMethod="native"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://xsd.propelorm.org/1.6/database.xsd"
+          namespace="Code2be\Model"
+        >
+    <behavior name="blamable" />
+    <behavior name="timestampable" />
+    <table name="user" phpName="User">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="first_name" type="varchar" size="255" required="true"/>
+        <validator column="first_name">
+          <rule name="required" message="This field is required."/>
+          <rule name="maxLength" value="255" message="This field can be no larger than ${value} in size"/>
+        </validator>
+        <column name="last_name" type="varchar" size="255" required="true"/>
+        <validator column="last_name">
+          <rule name="required" message="This field is required." />
+          <rule name="maxLength" value="255" message="This field can be no larger than ${value} in size" />
+        </validator>
+        <column name="email" type="varchar" size="255" required="true"/>
+        <validator column="email">
+          <rule name="required" message="This field is required." />
+          <rule name="unique" message="This entry already exists !"/>
+          <rule name="maxLength" value="255" message="This field can be no larger than ${value} in size" />
+        </validator>
+        <column name="password" type="varchar" size="255" />
+        <validator column="password">
+          <rule name="maxLength" value="255" message="This field can be no larger than ${value} in size" />
+        </validator>
+        <column name="phone_number" type="varchar" size="255" />
+        <validator column="phone_number">
+          <rule name="maxLength" value="255" message="This field can be no larger than ${value} in size" />
+        </validator>
+        <column name="role" type="varchar" size="25" />
+        <validator column="role">
+          <rule
+            name="validValues"
+            value="ROLE_MEMBER|ROLE_TREASURER|ROLE_PRESIDENT"
+            message="Please select a valid role type." />
+        </validator>
+        <unique name="email_index">
+          <unique-column name="email" />
+        </unique>
+    </table>
+    <table name="thread" phpName="Thread">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="title" type="varchar" size="255" required="true"/>
+        <validator column="title">
+          <rule name="required" message="This field is required."/>
+          <rule name="maxLength" value="255" message="This field can be no larger than ${value} in size" />
+        </validator>
+    </table>
+    <table name="post" phpName="Post">
+      <column name="id" required="true" primaryKey="true" autoIncrement="true" type="INTEGER" />
+      <column name="body" type="clob" required="true" primaryString="true" />
+      <validator column="body">
+        <rule name="required" message="This field is required."/>
+      </validator>
+      <behavior name="nested_set">
+        <parameter name="use_scope" value="true" />
+        <parameter name="scope_column" value="thread_id" />
+      </behavior>
+      <foreign-key foreignTable="thread" onDelete="cascade">
+        <reference local="thread_id" foreign="id" />
+      </foreign-key>
+    </table>
+</database>

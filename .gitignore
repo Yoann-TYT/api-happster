@@ -1,0 +1,10 @@
+/app/vendor
+/app/cache/*
+/app/data/*
+/app/config/parameters.yml
+/app/config/runtime-conf.xml
+/app/config/build.properties
+/app/config/code2be-conf.php
+/app/config/code2be-classmap.php
+*.DS_Store
+/tags
