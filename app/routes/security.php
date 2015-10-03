@@ -4,13 +4,13 @@
     })->name('login');
 
     $app->get('/logout', function() use ($app) {
-        \Code2be\Helper\Auth::logout();
+        \Happster\Helper\Auth::logout();
         $app->redirect('/');
     })->name('logout');
 
     $app->post('/login', function() use ($app) {
         $post = $app->request->post();
-        if (!\Code2be\Helper\Auth::login($post)) {
+        if (!\Happster\Helper\Auth::login($post)) {
             $app->flash('error', 'Mauvais login ou mot de passe');
         }
         $app->redirect('/');

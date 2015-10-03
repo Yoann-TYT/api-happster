@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
   <propel>
-    <datasources default="code2be">
-      <datasource id="code2be">
+    <datasources default="happster">
+      <datasource id="happster">
         <adapter>mysql</adapter> <!-- sqlite, mysql, mssql, oracle, or pgsql -->
         <connection>
-          <dsn>mysql:host=localhost;dbname=code2be</dsn>
+          <dsn>mysql:host=localhost;dbname=happster</dsn>
           <user>root</user>
           <password></password>
         </connection>

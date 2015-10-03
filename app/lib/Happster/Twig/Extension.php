@@ -1,0 +1,71 @@
+<?php
+namespace Happster\Twig;
+
+use Happster\Twig\Globals\Assets;
+use Happster\Twig\Globals\Session;
+
+class Extension extends \Twig_Extension
+{
+    private $twigEnvironment;
+
+    public function __construct($twigEnvironment) {
+        $this->twigEnvironment = $twigEnvironment;
+    }
+
+    public function getGlobals() {
+        return array(
+            'assets'  => new Assets(),
+            'session' => new Session(),
+        );
+    }
+
+    public function getFunctions() {
+        return array(
+            new \Twig_SimpleFunction('is_granted', function($roles) {
+                return \Happster\Helper\Voter::isGranted($roles);
+            }),
+            new \Twig_SimpleFunction('input_tag', function($phpName, $label, $value, $errors, $columnName, $type = 'text') {
+                echo $this->twigEnvironment->render(
+                    'form/inputTag.html.twig',
+                    [
+                        'phpName'    => $phpName,
+                        'label'      => $label,
+                        'value'      => $value,
+                        'errors'     => $errors,
+                        'columnName' => $columnName,
+                        'type'       => $type,
+                    ]
+                );
+            }),
+            new \Twig_SimpleFunction('textarea_tag', function($phpName, $label, $value, $errors, $columnName) {
+                echo $this->twigEnvironment->render(
+                    'form/textareaTag.html.twig',
+                    [
+                        'phpName'    => $phpName,
+                        'label'      => $label,
+                        'value'      => $value,
+                        'errors'     => $errors,
+                        'columnName' => $columnName,
+                    ]
+                );
+            }),
+            new \Twig_SimpleFunction('select_tag', function($phpName, $label, $choices, $selected, $errors, $columnName) {
+                echo $this->twigEnvironment->render(
+                    'form/selectTag.html.twig',
+                    [
+                        'phpName'    => $phpName,
+                        'label'      => $label,
+                        'choices'    => $choices,
+                        'selected'   => $selected,
+                        'errors'     => $errors,
+                        'columnName' => $columnName,
+                    ]
+                );
+            }),
+        );
+    }
+
+    public function getName() {
+        return 'code2be';
+    }
+}

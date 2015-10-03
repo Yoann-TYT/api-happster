@@ -1,13 +1,13 @@
 # Database driver
 propel.database = mysql
-propel.database.url = mysql:host=localhost;dbname=code2be
+propel.database.url = mysql:host=localhost;dbname=happster
 propel.database.user = root
 propel.database.password =
 
 # Project name
-propel.project = code2be
+propel.project = happster
 
-propel.output.dir = ${propel.project.dir}/../lib/Code2be/Model
+propel.output.dir = ${propel.project.dir}/../lib/Happster/Model
 propel.php.dir = ${propel.output.dir}
 propel.targetPackage =
 
@@ -19,4 +19,4 @@ propel.runtime.phpconf.file = ${propel.project}-conf.php
 propel.runtime.phpconf-classmap.file = ${propel.project}-classmap.php
 
 # Add your custom behavior paths here
-propel.behavior.blamable.class = ${propel.project.dir}/../lib.Code2be\Propel\Behavior\BlamableBehavior
+propel.behavior.blamable.class = ${propel.project.dir}/../lib.Happster\Propel\Behavior\BlamableBehavior

@@ -8,10 +8,10 @@ define('__ROOT__', dirname(__FILE__).'/..');
 require_once __ROOT__.'/app/vendor/propel/propel1/runtime/lib/Propel.php';
 
 // Initialize Propel with the runtime configuration
-Propel::init(__ROOT__."/app/config/code2be-conf.php");
+Propel::init(__ROOT__."/app/config/happster-conf.php");
 
 use Symfony\Component\Console\Application;
-use Code2be\Command\FixturesCommand;
+use Happster\Command\FixturesCommand;
 
 $console = new Application();
 $console->add(new FixturesCommand);

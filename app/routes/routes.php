@@ -1,25 +1,12 @@
 <?php
     $app->get('/', function() use ($app) {
-        echo $app->view->render('homepage.html.twig', ['active' => 'homepage']);
+        echo "It Works";
     })->name('homepage');
 
+    $app->get('/test', function() use ($app) {
+        echo $tes->pwte();
+        echo "It Workss";
+
+    })->name('homepaget');
     require_once __ROOT__.'/app/routes/security.php';
-    require_once __ROOT__.'/app/routes/users.php';
-    require_once __ROOT__.'/app/routes/ideabox.php';
-
-
-    $app->get('/accounting/incoming', function() use ($app) {
-        echo $app->view->render(
-            'accounting.html.twig',
-            ['type' => 'incoming', 'active' => 'accounting']
-        );
-    })->name('incomingAccounting');
-
-    $app->get('/accounting/outgoing', function() use ($app) {
-        echo $app->view->render(
-            'accounting.html.twig',
-            ['type' => 'outgoing', 'active' => 'accounting']
-        );
-    })->name('outgoingAccounting');
-
 ?>

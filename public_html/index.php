@@ -9,7 +9,7 @@ $app = new \Slim\Slim([
     'templates.path' => '../templates',
     'view' => new \Slim\Views\Twig(),
 ]);
-$app->add(new \Code2be\Middleware\Security());
+$app->add(new \Happster\Middleware\Security());
 // View templates
 $view = $app->view();
 $view->parserOptions = array(
@@ -26,13 +26,13 @@ $view->parserExtensions = array(
 $app->view = $view;
 
 $twig = $app->view->getEnvironment();
-$twig->addExtension(new \Code2be\Twig\Extension($twig));
+$twig->addExtension(new \Happster\Twig\Extension($twig));
 
 // Include the main Propel script
 require_once __ROOT__.'/app/vendor/propel/propel1/runtime/lib/Propel.php';
 
 // Initialize Propel with the runtime configuration
-Propel::init(__ROOT__."/app/config/code2be-conf.php");
+Propel::init(__ROOT__."/app/config/happster-conf.php");
 
 require '../app/routes/routes.php';
 
