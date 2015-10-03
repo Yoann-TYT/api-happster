@@ -1,5 +1,5 @@
 # API Happster
-CHRIS
+
 
 You need to use composer to install this application.
 
