@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use Happster\Fixtures\User;
+use Happster\Fixtures\Happster;
 
 class FixturesCommand extends Command
 {
@@ -21,5 +22,7 @@ class FixturesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output) {
         User::load();
         $output->writeln('User fixture loaded');
+        Happster::load();
+        $output->writeln('Fixture loaded');
     }
 }

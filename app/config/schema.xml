@@ -47,6 +47,10 @@
         <column name="budget_souhaite" type="float" size="10" scale="5"></column>
         <column name="consommation" type="float" size="10" scale="5"></column>
         <column name="production" type="float" size="10" scale="5"></column>
+        <column name="compte_edf_id" type="INTEGER" primaryKey="true"/>
+        <foreign-key foreignTable="compte_edf" onDelete="cascade">
+            <reference local="compte_edf_id" foreign="id" />
+        </foreign-key>
     </table>
     <table name="poste" phpName="Poste">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
@@ -55,11 +59,28 @@
         <column name="reglage_possible" type="boolean"></column>
         <column name="producteur" type="boolean" default="false"></column>
     </table>
+    <table name="compte_edf_poste" phpName="CompteEdfPoste">
+      <column name="compte_edf_id" type="INTEGER" primaryKey="true"/>
+      <column name="poste_id" type="INTEGER" primaryKey="true"/>
+      <column name="puissance" type="float" size="10" scale="5"></column>
+      <column name="time" type="timestamp"></column>
+      <foreign-key foreignTable="compte_edf">
+        <reference local="compte_edf_id" foreign="id"/>
+      </foreign-key>
+      <foreign-key foreignTable="poste">
+        <reference local="poste_id" foreign="id"/>
+      </foreign-key>
+    </table>
+
     <table name="activite" phpName="Activite">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="time" type="timestamp" required="true"/>
         <column name="production" type="float" size="10" scale="5"></column>
         <column name="consommation" type="float" size="10" scale="5"></column>
+        <column name="compte_edf_id" type="INTEGER" primaryKey="true"/>
+        <foreign-key foreignTable="compte_edf" onDelete="cascade">
+            <reference local="compte_edf_id" foreign="id" />
+        </foreign-key>
     </table>
     <table name="user" phpName="User">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>

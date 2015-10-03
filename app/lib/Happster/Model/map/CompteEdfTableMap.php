@@ -64,6 +64,9 @@ class CompteEdfTableMap extends TableMap
     {
         $this->addRelation('UserRelatedByCreatedBy', 'Happster\\Model\\User', RelationMap::MANY_TO_ONE, array('created_by' => 'id', ), null, null);
         $this->addRelation('UserRelatedByUpdatedBy', 'Happster\\Model\\User', RelationMap::MANY_TO_ONE, array('updated_by' => 'id', ), null, null);
+        $this->addRelation('Historique', 'Happster\\Model\\Historique', RelationMap::ONE_TO_MANY, array('id' => 'compte_edf_id', ), 'CASCADE', null, 'Historiques');
+        $this->addRelation('CompteEdfPoste', 'Happster\\Model\\CompteEdfPoste', RelationMap::ONE_TO_MANY, array('id' => 'compte_edf_id', ), null, null, 'CompteEdfPostes');
+        $this->addRelation('Activite', 'Happster\\Model\\Activite', RelationMap::ONE_TO_MANY, array('id' => 'compte_edf_id', ), 'CASCADE', null, 'Activites');
     } // buildRelations()
 
     /**

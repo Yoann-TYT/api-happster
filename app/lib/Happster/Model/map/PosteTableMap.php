@@ -61,6 +61,7 @@ class PosteTableMap extends TableMap
     {
         $this->addRelation('UserRelatedByCreatedBy', 'Happster\\Model\\User', RelationMap::MANY_TO_ONE, array('created_by' => 'id', ), null, null);
         $this->addRelation('UserRelatedByUpdatedBy', 'Happster\\Model\\User', RelationMap::MANY_TO_ONE, array('updated_by' => 'id', ), null, null);
+        $this->addRelation('CompteEdfPoste', 'Happster\\Model\\CompteEdfPoste', RelationMap::ONE_TO_MANY, array('id' => 'poste_id', ), null, null, 'CompteEdfPostes');
     } // buildRelations()
 
     /**

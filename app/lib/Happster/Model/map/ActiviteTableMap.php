@@ -46,6 +46,7 @@ class ActiviteTableMap extends TableMap
         $this->addColumn('time', 'Time', 'TIMESTAMP', true, null, null);
         $this->addColumn('production', 'Production', 'FLOAT', false, 10, null);
         $this->addColumn('consommation', 'Consommation', 'FLOAT', false, 10, null);
+        $this->addForeignPrimaryKey('compte_edf_id', 'CompteEdfId', 'INTEGER' , 'compte_edf', 'id', true, null, null);
         $this->addForeignKey('created_by', 'CreatedBy', 'INTEGER', 'user', 'id', false, null, null);
         $this->addForeignKey('updated_by', 'UpdatedBy', 'INTEGER', 'user', 'id', false, null, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
@@ -58,6 +59,7 @@ class ActiviteTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('CompteEdf', 'Happster\\Model\\CompteEdf', RelationMap::MANY_TO_ONE, array('compte_edf_id' => 'id', ), 'CASCADE', null);
         $this->addRelation('UserRelatedByCreatedBy', 'Happster\\Model\\User', RelationMap::MANY_TO_ONE, array('created_by' => 'id', ), null, null);
         $this->addRelation('UserRelatedByUpdatedBy', 'Happster\\Model\\User', RelationMap::MANY_TO_ONE, array('updated_by' => 'id', ), null, null);
     } // buildRelations()

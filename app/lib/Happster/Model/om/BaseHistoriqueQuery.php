@@ -12,6 +12,7 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
+use Happster\Model\CompteEdf;
 use Happster\Model\Historique;
 use Happster\Model\HistoriquePeer;
 use Happster\Model\HistoriqueQuery;
@@ -27,6 +28,7 @@ use Happster\Model\User;
  * @method HistoriqueQuery orderByBudgetSouhaite($order = Criteria::ASC) Order by the budget_souhaite column
  * @method HistoriqueQuery orderByConsommation($order = Criteria::ASC) Order by the consommation column
  * @method HistoriqueQuery orderByProduction($order = Criteria::ASC) Order by the production column
+ * @method HistoriqueQuery orderByCompteEdfId($order = Criteria::ASC) Order by the compte_edf_id column
  * @method HistoriqueQuery orderByCreatedBy($order = Criteria::ASC) Order by the created_by column
  * @method HistoriqueQuery orderByUpdatedBy($order = Criteria::ASC) Order by the updated_by column
  * @method HistoriqueQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
@@ -37,6 +39,7 @@ use Happster\Model\User;
  * @method HistoriqueQuery groupByBudgetSouhaite() Group by the budget_souhaite column
  * @method HistoriqueQuery groupByConsommation() Group by the consommation column
  * @method HistoriqueQuery groupByProduction() Group by the production column
+ * @method HistoriqueQuery groupByCompteEdfId() Group by the compte_edf_id column
  * @method HistoriqueQuery groupByCreatedBy() Group by the created_by column
  * @method HistoriqueQuery groupByUpdatedBy() Group by the updated_by column
  * @method HistoriqueQuery groupByCreatedAt() Group by the created_at column
@@ -45,6 +48,10 @@ use Happster\Model\User;
  * @method HistoriqueQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method HistoriqueQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method HistoriqueQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method HistoriqueQuery leftJoinCompteEdf($relationAlias = null) Adds a LEFT JOIN clause to the query using the CompteEdf relation
+ * @method HistoriqueQuery rightJoinCompteEdf($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CompteEdf relation
+ * @method HistoriqueQuery innerJoinCompteEdf($relationAlias = null) Adds a INNER JOIN clause to the query using the CompteEdf relation
  *
  * @method HistoriqueQuery leftJoinUserRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserRelatedByCreatedBy relation
  * @method HistoriqueQuery rightJoinUserRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserRelatedByCreatedBy relation
@@ -57,10 +64,12 @@ use Happster\Model\User;
  * @method Historique findOne(PropelPDO $con = null) Return the first Historique matching the query
  * @method Historique findOneOrCreate(PropelPDO $con = null) Return the first Historique matching the query, or a new Historique object populated from the query conditions when no match is found
  *
+ * @method Historique findOneById(int $id) Return the first Historique filtered by the id column
  * @method Historique findOneByTime(string $time) Return the first Historique filtered by the time column
  * @method Historique findOneByBudgetSouhaite(double $budget_souhaite) Return the first Historique filtered by the budget_souhaite column
  * @method Historique findOneByConsommation(double $consommation) Return the first Historique filtered by the consommation column
  * @method Historique findOneByProduction(double $production) Return the first Historique filtered by the production column
+ * @method Historique findOneByCompteEdfId(int $compte_edf_id) Return the first Historique filtered by the compte_edf_id column
  * @method Historique findOneByCreatedBy(int $created_by) Return the first Historique filtered by the created_by column
  * @method Historique findOneByUpdatedBy(int $updated_by) Return the first Historique filtered by the updated_by column
  * @method Historique findOneByCreatedAt(string $created_at) Return the first Historique filtered by the created_at column
@@ -71,6 +80,7 @@ use Happster\Model\User;
  * @method array findByBudgetSouhaite(double $budget_souhaite) Return Historique objects filtered by the budget_souhaite column
  * @method array findByConsommation(double $consommation) Return Historique objects filtered by the consommation column
  * @method array findByProduction(double $production) Return Historique objects filtered by the production column
+ * @method array findByCompteEdfId(int $compte_edf_id) Return Historique objects filtered by the compte_edf_id column
  * @method array findByCreatedBy(int $created_by) Return Historique objects filtered by the created_by column
  * @method array findByUpdatedBy(int $updated_by) Return Historique objects filtered by the updated_by column
  * @method array findByCreatedAt(string $created_at) Return Historique objects filtered by the created_at column
@@ -126,10 +136,11 @@ abstract class BaseHistoriqueQuery extends ModelCriteria
      * Go fast if the query is untouched.
      *
      * <code>
-     * $obj  = $c->findPk(12, $con);
+     * $obj = $c->findPk(array(12, 34), $con);
      * </code>
      *
-     * @param mixed $key Primary key to use for the query
+     * @param array $key Primary key to use for the query
+                         A Primary key composition: [$id, $compte_edf_id]
      * @param     PropelPDO $con an optional connection object
      *
      * @return   Historique|Historique[]|mixed the result, formatted by the current formatter
@@ -139,7 +150,7 @@ abstract class BaseHistoriqueQuery extends ModelCriteria
         if ($key === null) {
             return null;
         }
-        if ((null !== ($obj = HistoriquePeer::getInstanceFromPool((string) $key))) && !$this->formatter) {
+        if ((null !== ($obj = HistoriquePeer::getInstanceFromPool(serialize(array((string) $key[0], (string) $key[1]))))) && !$this->formatter) {
             // the object is already in the instance pool
             return $obj;
         }
@@ -157,20 +168,6 @@ abstract class BaseHistoriqueQuery extends ModelCriteria
     }
 
     /**
-     * Alias of findPk to use instance pooling
-     *
-     * @param     mixed $key Primary key to use for the query
-     * @param     PropelPDO $con A connection object
-     *
-     * @return                 Historique A model object, or null if the key is not found
-     * @throws PropelException
-     */
-     public function findOneById($key, $con = null)
-     {
-        return $this->findPk($key, $con);
-     }
-
-    /**
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
@@ -182,10 +179,11 @@ abstract class BaseHistoriqueQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `time`, `budget_souhaite`, `consommation`, `production`, `created_by`, `updated_by`, `created_at`, `updated_at` FROM `historique` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `time`, `budget_souhaite`, `consommation`, `production`, `compte_edf_id`, `created_by`, `updated_by`, `created_at`, `updated_at` FROM `historique` WHERE `id` = :p0 AND `compte_edf_id` = :p1';
         try {
             $stmt = $con->prepare($sql);
-            $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
+            $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
+            $stmt->bindValue(':p1', $key[1], PDO::PARAM_INT);
             $stmt->execute();
         } catch (Exception $e) {
             Propel::log($e->getMessage(), Propel::LOG_ERR);
@@ -195,7 +193,7 @@ abstract class BaseHistoriqueQuery extends ModelCriteria
         if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             $obj = new Historique();
             $obj->hydrate($row);
-            HistoriquePeer::addInstanceToPool($obj, (string) $key);
+            HistoriquePeer::addInstanceToPool($obj, serialize(array((string) $key[0], (string) $key[1])));
         }
         $stmt->closeCursor();
 
@@ -224,7 +222,7 @@ abstract class BaseHistoriqueQuery extends ModelCriteria
     /**
      * Find objects by primary key
      * <code>
-     * $objs = $c->findPks(array(12, 56, 832), $con);
+     * $objs = $c->findPks(array(array(12, 56), array(832, 123), array(123, 456)), $con);
      * </code>
      * @param     array $keys Primary keys to use for the query
      * @param     PropelPDO $con an optional connection object
@@ -254,8 +252,10 @@ abstract class BaseHistoriqueQuery extends ModelCriteria
      */
     public function filterByPrimaryKey($key)
     {
+        $this->addUsingAlias(HistoriquePeer::ID, $key[0], Criteria::EQUAL);
+        $this->addUsingAlias(HistoriquePeer::COMPTE_EDF_ID, $key[1], Criteria::EQUAL);
 
-        return $this->addUsingAlias(HistoriquePeer::ID, $key, Criteria::EQUAL);
+        return $this;
     }
 
     /**
@@ -267,8 +267,17 @@ abstract class BaseHistoriqueQuery extends ModelCriteria
      */
     public function filterByPrimaryKeys($keys)
     {
+        if (empty($keys)) {
+            return $this->add(null, '1<>1', Criteria::CUSTOM);
+        }
+        foreach ($keys as $key) {
+            $cton0 = $this->getNewCriterion(HistoriquePeer::ID, $key[0], Criteria::EQUAL);
+            $cton1 = $this->getNewCriterion(HistoriquePeer::COMPTE_EDF_ID, $key[1], Criteria::EQUAL);
+            $cton0->addAnd($cton1);
+            $this->addOr($cton0);
+        }
 
-        return $this->addUsingAlias(HistoriquePeer::ID, $keys, Criteria::IN);
+        return $this;
     }
 
     /**
@@ -483,6 +492,50 @@ abstract class BaseHistoriqueQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the compte_edf_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByCompteEdfId(1234); // WHERE compte_edf_id = 1234
+     * $query->filterByCompteEdfId(array(12, 34)); // WHERE compte_edf_id IN (12, 34)
+     * $query->filterByCompteEdfId(array('min' => 12)); // WHERE compte_edf_id >= 12
+     * $query->filterByCompteEdfId(array('max' => 12)); // WHERE compte_edf_id <= 12
+     * </code>
+     *
+     * @see       filterByCompteEdf()
+     *
+     * @param     mixed $compteEdfId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return HistoriqueQuery The current query, for fluid interface
+     */
+    public function filterByCompteEdfId($compteEdfId = null, $comparison = null)
+    {
+        if (is_array($compteEdfId)) {
+            $useMinMax = false;
+            if (isset($compteEdfId['min'])) {
+                $this->addUsingAlias(HistoriquePeer::COMPTE_EDF_ID, $compteEdfId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($compteEdfId['max'])) {
+                $this->addUsingAlias(HistoriquePeer::COMPTE_EDF_ID, $compteEdfId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(HistoriquePeer::COMPTE_EDF_ID, $compteEdfId, $comparison);
+    }
+
+    /**
      * Filter the query on the created_by column
      *
      * Example usage:
@@ -657,6 +710,82 @@ abstract class BaseHistoriqueQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related CompteEdf object
+     *
+     * @param   CompteEdf|PropelObjectCollection $compteEdf The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 HistoriqueQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCompteEdf($compteEdf, $comparison = null)
+    {
+        if ($compteEdf instanceof CompteEdf) {
+            return $this
+                ->addUsingAlias(HistoriquePeer::COMPTE_EDF_ID, $compteEdf->getId(), $comparison);
+        } elseif ($compteEdf instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(HistoriquePeer::COMPTE_EDF_ID, $compteEdf->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByCompteEdf() only accepts arguments of type CompteEdf or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CompteEdf relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return HistoriqueQuery The current query, for fluid interface
+     */
+    public function joinCompteEdf($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CompteEdf');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CompteEdf');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CompteEdf relation CompteEdf object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Happster\Model\CompteEdfQuery A secondary query class using the current class as primary query
+     */
+    public function useCompteEdfQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinCompteEdf($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CompteEdf', '\Happster\Model\CompteEdfQuery');
+    }
+
+    /**
      * Filter the query by a related User object
      *
      * @param   User|PropelObjectCollection $user The related object(s) to use as filter
@@ -818,7 +947,9 @@ abstract class BaseHistoriqueQuery extends ModelCriteria
     public function prune($historique = null)
     {
         if ($historique) {
-            $this->addUsingAlias(HistoriquePeer::ID, $historique->getId(), Criteria::NOT_EQUAL);
+            $this->addCond('pruneCond0', $this->getAliasedColName(HistoriquePeer::ID), $historique->getId(), Criteria::NOT_EQUAL);
+            $this->addCond('pruneCond1', $this->getAliasedColName(HistoriquePeer::COMPTE_EDF_ID), $historique->getCompteEdfId(), Criteria::NOT_EQUAL);
+            $this->combine(array('pruneCond0', 'pruneCond1'), Criteria::LOGICAL_OR);
         }
 
         return $this;

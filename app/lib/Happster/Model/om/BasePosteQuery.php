@@ -12,6 +12,7 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
+use Happster\Model\CompteEdfPoste;
 use Happster\Model\Poste;
 use Happster\Model\PostePeer;
 use Happster\Model\PosteQuery;
@@ -53,6 +54,10 @@ use Happster\Model\User;
  * @method PosteQuery leftJoinUserRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserRelatedByUpdatedBy relation
  * @method PosteQuery rightJoinUserRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserRelatedByUpdatedBy relation
  * @method PosteQuery innerJoinUserRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the UserRelatedByUpdatedBy relation
+ *
+ * @method PosteQuery leftJoinCompteEdfPoste($relationAlias = null) Adds a LEFT JOIN clause to the query using the CompteEdfPoste relation
+ * @method PosteQuery rightJoinCompteEdfPoste($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CompteEdfPoste relation
+ * @method PosteQuery innerJoinCompteEdfPoste($relationAlias = null) Adds a INNER JOIN clause to the query using the CompteEdfPoste relation
  *
  * @method Poste findOne(PropelPDO $con = null) Return the first Poste matching the query
  * @method Poste findOneOrCreate(PropelPDO $con = null) Return the first Poste matching the query, or a new Poste object populated from the query conditions when no match is found
@@ -762,6 +767,80 @@ abstract class BasePosteQuery extends ModelCriteria
         return $this
             ->joinUserRelatedByUpdatedBy($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'UserRelatedByUpdatedBy', '\Happster\Model\UserQuery');
+    }
+
+    /**
+     * Filter the query by a related CompteEdfPoste object
+     *
+     * @param   CompteEdfPoste|PropelObjectCollection $compteEdfPoste  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 PosteQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCompteEdfPoste($compteEdfPoste, $comparison = null)
+    {
+        if ($compteEdfPoste instanceof CompteEdfPoste) {
+            return $this
+                ->addUsingAlias(PostePeer::ID, $compteEdfPoste->getPosteId(), $comparison);
+        } elseif ($compteEdfPoste instanceof PropelObjectCollection) {
+            return $this
+                ->useCompteEdfPosteQuery()
+                ->filterByPrimaryKeys($compteEdfPoste->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCompteEdfPoste() only accepts arguments of type CompteEdfPoste or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CompteEdfPoste relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return PosteQuery The current query, for fluid interface
+     */
+    public function joinCompteEdfPoste($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CompteEdfPoste');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CompteEdfPoste');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CompteEdfPoste relation CompteEdfPoste object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Happster\Model\CompteEdfPosteQuery A secondary query class using the current class as primary query
+     */
+    public function useCompteEdfPosteQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinCompteEdfPoste($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CompteEdfPoste', '\Happster\Model\CompteEdfPosteQuery');
     }
 
     /**

@@ -15,6 +15,7 @@ use \PropelPDO;
 use Happster\Model\Activite;
 use Happster\Model\ActivitePeer;
 use Happster\Model\ActiviteQuery;
+use Happster\Model\CompteEdf;
 use Happster\Model\User;
 
 /**
@@ -26,6 +27,7 @@ use Happster\Model\User;
  * @method ActiviteQuery orderByTime($order = Criteria::ASC) Order by the time column
  * @method ActiviteQuery orderByProduction($order = Criteria::ASC) Order by the production column
  * @method ActiviteQuery orderByConsommation($order = Criteria::ASC) Order by the consommation column
+ * @method ActiviteQuery orderByCompteEdfId($order = Criteria::ASC) Order by the compte_edf_id column
  * @method ActiviteQuery orderByCreatedBy($order = Criteria::ASC) Order by the created_by column
  * @method ActiviteQuery orderByUpdatedBy($order = Criteria::ASC) Order by the updated_by column
  * @method ActiviteQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
@@ -35,6 +37,7 @@ use Happster\Model\User;
  * @method ActiviteQuery groupByTime() Group by the time column
  * @method ActiviteQuery groupByProduction() Group by the production column
  * @method ActiviteQuery groupByConsommation() Group by the consommation column
+ * @method ActiviteQuery groupByCompteEdfId() Group by the compte_edf_id column
  * @method ActiviteQuery groupByCreatedBy() Group by the created_by column
  * @method ActiviteQuery groupByUpdatedBy() Group by the updated_by column
  * @method ActiviteQuery groupByCreatedAt() Group by the created_at column
@@ -43,6 +46,10 @@ use Happster\Model\User;
  * @method ActiviteQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method ActiviteQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method ActiviteQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method ActiviteQuery leftJoinCompteEdf($relationAlias = null) Adds a LEFT JOIN clause to the query using the CompteEdf relation
+ * @method ActiviteQuery rightJoinCompteEdf($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CompteEdf relation
+ * @method ActiviteQuery innerJoinCompteEdf($relationAlias = null) Adds a INNER JOIN clause to the query using the CompteEdf relation
  *
  * @method ActiviteQuery leftJoinUserRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserRelatedByCreatedBy relation
  * @method ActiviteQuery rightJoinUserRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserRelatedByCreatedBy relation
@@ -55,9 +62,11 @@ use Happster\Model\User;
  * @method Activite findOne(PropelPDO $con = null) Return the first Activite matching the query
  * @method Activite findOneOrCreate(PropelPDO $con = null) Return the first Activite matching the query, or a new Activite object populated from the query conditions when no match is found
  *
+ * @method Activite findOneById(int $id) Return the first Activite filtered by the id column
  * @method Activite findOneByTime(string $time) Return the first Activite filtered by the time column
  * @method Activite findOneByProduction(double $production) Return the first Activite filtered by the production column
  * @method Activite findOneByConsommation(double $consommation) Return the first Activite filtered by the consommation column
+ * @method Activite findOneByCompteEdfId(int $compte_edf_id) Return the first Activite filtered by the compte_edf_id column
  * @method Activite findOneByCreatedBy(int $created_by) Return the first Activite filtered by the created_by column
  * @method Activite findOneByUpdatedBy(int $updated_by) Return the first Activite filtered by the updated_by column
  * @method Activite findOneByCreatedAt(string $created_at) Return the first Activite filtered by the created_at column
@@ -67,6 +76,7 @@ use Happster\Model\User;
  * @method array findByTime(string $time) Return Activite objects filtered by the time column
  * @method array findByProduction(double $production) Return Activite objects filtered by the production column
  * @method array findByConsommation(double $consommation) Return Activite objects filtered by the consommation column
+ * @method array findByCompteEdfId(int $compte_edf_id) Return Activite objects filtered by the compte_edf_id column
  * @method array findByCreatedBy(int $created_by) Return Activite objects filtered by the created_by column
  * @method array findByUpdatedBy(int $updated_by) Return Activite objects filtered by the updated_by column
  * @method array findByCreatedAt(string $created_at) Return Activite objects filtered by the created_at column
@@ -122,10 +132,11 @@ abstract class BaseActiviteQuery extends ModelCriteria
      * Go fast if the query is untouched.
      *
      * <code>
-     * $obj  = $c->findPk(12, $con);
+     * $obj = $c->findPk(array(12, 34), $con);
      * </code>
      *
-     * @param mixed $key Primary key to use for the query
+     * @param array $key Primary key to use for the query
+                         A Primary key composition: [$id, $compte_edf_id]
      * @param     PropelPDO $con an optional connection object
      *
      * @return   Activite|Activite[]|mixed the result, formatted by the current formatter
@@ -135,7 +146,7 @@ abstract class BaseActiviteQuery extends ModelCriteria
         if ($key === null) {
             return null;
         }
-        if ((null !== ($obj = ActivitePeer::getInstanceFromPool((string) $key))) && !$this->formatter) {
+        if ((null !== ($obj = ActivitePeer::getInstanceFromPool(serialize(array((string) $key[0], (string) $key[1]))))) && !$this->formatter) {
             // the object is already in the instance pool
             return $obj;
         }
@@ -153,20 +164,6 @@ abstract class BaseActiviteQuery extends ModelCriteria
     }
 
     /**
-     * Alias of findPk to use instance pooling
-     *
-     * @param     mixed $key Primary key to use for the query
-     * @param     PropelPDO $con A connection object
-     *
-     * @return                 Activite A model object, or null if the key is not found
-     * @throws PropelException
-     */
-     public function findOneById($key, $con = null)
-     {
-        return $this->findPk($key, $con);
-     }
-
-    /**
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
@@ -178,10 +175,11 @@ abstract class BaseActiviteQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `time`, `production`, `consommation`, `created_by`, `updated_by`, `created_at`, `updated_at` FROM `activite` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `time`, `production`, `consommation`, `compte_edf_id`, `created_by`, `updated_by`, `created_at`, `updated_at` FROM `activite` WHERE `id` = :p0 AND `compte_edf_id` = :p1';
         try {
             $stmt = $con->prepare($sql);
-            $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
+            $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
+            $stmt->bindValue(':p1', $key[1], PDO::PARAM_INT);
             $stmt->execute();
         } catch (Exception $e) {
             Propel::log($e->getMessage(), Propel::LOG_ERR);
@@ -191,7 +189,7 @@ abstract class BaseActiviteQuery extends ModelCriteria
         if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             $obj = new Activite();
             $obj->hydrate($row);
-            ActivitePeer::addInstanceToPool($obj, (string) $key);
+            ActivitePeer::addInstanceToPool($obj, serialize(array((string) $key[0], (string) $key[1])));
         }
         $stmt->closeCursor();
 
@@ -220,7 +218,7 @@ abstract class BaseActiviteQuery extends ModelCriteria
     /**
      * Find objects by primary key
      * <code>
-     * $objs = $c->findPks(array(12, 56, 832), $con);
+     * $objs = $c->findPks(array(array(12, 56), array(832, 123), array(123, 456)), $con);
      * </code>
      * @param     array $keys Primary keys to use for the query
      * @param     PropelPDO $con an optional connection object
@@ -250,8 +248,10 @@ abstract class BaseActiviteQuery extends ModelCriteria
      */
     public function filterByPrimaryKey($key)
     {
+        $this->addUsingAlias(ActivitePeer::ID, $key[0], Criteria::EQUAL);
+        $this->addUsingAlias(ActivitePeer::COMPTE_EDF_ID, $key[1], Criteria::EQUAL);
 
-        return $this->addUsingAlias(ActivitePeer::ID, $key, Criteria::EQUAL);
+        return $this;
     }
 
     /**
@@ -263,8 +263,17 @@ abstract class BaseActiviteQuery extends ModelCriteria
      */
     public function filterByPrimaryKeys($keys)
     {
+        if (empty($keys)) {
+            return $this->add(null, '1<>1', Criteria::CUSTOM);
+        }
+        foreach ($keys as $key) {
+            $cton0 = $this->getNewCriterion(ActivitePeer::ID, $key[0], Criteria::EQUAL);
+            $cton1 = $this->getNewCriterion(ActivitePeer::COMPTE_EDF_ID, $key[1], Criteria::EQUAL);
+            $cton0->addAnd($cton1);
+            $this->addOr($cton0);
+        }
 
-        return $this->addUsingAlias(ActivitePeer::ID, $keys, Criteria::IN);
+        return $this;
     }
 
     /**
@@ -434,6 +443,50 @@ abstract class BaseActiviteQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ActivitePeer::CONSOMMATION, $consommation, $comparison);
+    }
+
+    /**
+     * Filter the query on the compte_edf_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByCompteEdfId(1234); // WHERE compte_edf_id = 1234
+     * $query->filterByCompteEdfId(array(12, 34)); // WHERE compte_edf_id IN (12, 34)
+     * $query->filterByCompteEdfId(array('min' => 12)); // WHERE compte_edf_id >= 12
+     * $query->filterByCompteEdfId(array('max' => 12)); // WHERE compte_edf_id <= 12
+     * </code>
+     *
+     * @see       filterByCompteEdf()
+     *
+     * @param     mixed $compteEdfId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ActiviteQuery The current query, for fluid interface
+     */
+    public function filterByCompteEdfId($compteEdfId = null, $comparison = null)
+    {
+        if (is_array($compteEdfId)) {
+            $useMinMax = false;
+            if (isset($compteEdfId['min'])) {
+                $this->addUsingAlias(ActivitePeer::COMPTE_EDF_ID, $compteEdfId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($compteEdfId['max'])) {
+                $this->addUsingAlias(ActivitePeer::COMPTE_EDF_ID, $compteEdfId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(ActivitePeer::COMPTE_EDF_ID, $compteEdfId, $comparison);
     }
 
     /**
@@ -611,6 +664,82 @@ abstract class BaseActiviteQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related CompteEdf object
+     *
+     * @param   CompteEdf|PropelObjectCollection $compteEdf The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 ActiviteQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCompteEdf($compteEdf, $comparison = null)
+    {
+        if ($compteEdf instanceof CompteEdf) {
+            return $this
+                ->addUsingAlias(ActivitePeer::COMPTE_EDF_ID, $compteEdf->getId(), $comparison);
+        } elseif ($compteEdf instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(ActivitePeer::COMPTE_EDF_ID, $compteEdf->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByCompteEdf() only accepts arguments of type CompteEdf or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CompteEdf relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return ActiviteQuery The current query, for fluid interface
+     */
+    public function joinCompteEdf($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CompteEdf');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CompteEdf');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CompteEdf relation CompteEdf object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Happster\Model\CompteEdfQuery A secondary query class using the current class as primary query
+     */
+    public function useCompteEdfQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinCompteEdf($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CompteEdf', '\Happster\Model\CompteEdfQuery');
+    }
+
+    /**
      * Filter the query by a related User object
      *
      * @param   User|PropelObjectCollection $user The related object(s) to use as filter
@@ -772,7 +901,9 @@ abstract class BaseActiviteQuery extends ModelCriteria
     public function prune($activite = null)
     {
         if ($activite) {
-            $this->addUsingAlias(ActivitePeer::ID, $activite->getId(), Criteria::NOT_EQUAL);
+            $this->addCond('pruneCond0', $this->getAliasedColName(ActivitePeer::ID), $activite->getId(), Criteria::NOT_EQUAL);
+            $this->addCond('pruneCond1', $this->getAliasedColName(ActivitePeer::COMPTE_EDF_ID), $activite->getCompteEdfId(), Criteria::NOT_EQUAL);
+            $this->combine(array('pruneCond0', 'pruneCond1'), Criteria::LOGICAL_OR);
         }
 
         return $this;

@@ -12,9 +12,12 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
+use Happster\Model\Activite;
 use Happster\Model\CompteEdf;
 use Happster\Model\CompteEdfPeer;
+use Happster\Model\CompteEdfPoste;
 use Happster\Model\CompteEdfQuery;
+use Happster\Model\Historique;
 use Happster\Model\User;
 
 /**
@@ -59,6 +62,18 @@ use Happster\Model\User;
  * @method CompteEdfQuery leftJoinUserRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserRelatedByUpdatedBy relation
  * @method CompteEdfQuery rightJoinUserRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserRelatedByUpdatedBy relation
  * @method CompteEdfQuery innerJoinUserRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the UserRelatedByUpdatedBy relation
+ *
+ * @method CompteEdfQuery leftJoinHistorique($relationAlias = null) Adds a LEFT JOIN clause to the query using the Historique relation
+ * @method CompteEdfQuery rightJoinHistorique($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Historique relation
+ * @method CompteEdfQuery innerJoinHistorique($relationAlias = null) Adds a INNER JOIN clause to the query using the Historique relation
+ *
+ * @method CompteEdfQuery leftJoinCompteEdfPoste($relationAlias = null) Adds a LEFT JOIN clause to the query using the CompteEdfPoste relation
+ * @method CompteEdfQuery rightJoinCompteEdfPoste($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CompteEdfPoste relation
+ * @method CompteEdfQuery innerJoinCompteEdfPoste($relationAlias = null) Adds a INNER JOIN clause to the query using the CompteEdfPoste relation
+ *
+ * @method CompteEdfQuery leftJoinActivite($relationAlias = null) Adds a LEFT JOIN clause to the query using the Activite relation
+ * @method CompteEdfQuery rightJoinActivite($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Activite relation
+ * @method CompteEdfQuery innerJoinActivite($relationAlias = null) Adds a INNER JOIN clause to the query using the Activite relation
  *
  * @method CompteEdf findOne(PropelPDO $con = null) Return the first CompteEdf matching the query
  * @method CompteEdf findOneOrCreate(PropelPDO $con = null) Return the first CompteEdf matching the query, or a new CompteEdf object populated from the query conditions when no match is found
@@ -891,6 +906,228 @@ abstract class BaseCompteEdfQuery extends ModelCriteria
         return $this
             ->joinUserRelatedByUpdatedBy($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'UserRelatedByUpdatedBy', '\Happster\Model\UserQuery');
+    }
+
+    /**
+     * Filter the query by a related Historique object
+     *
+     * @param   Historique|PropelObjectCollection $historique  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CompteEdfQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByHistorique($historique, $comparison = null)
+    {
+        if ($historique instanceof Historique) {
+            return $this
+                ->addUsingAlias(CompteEdfPeer::ID, $historique->getCompteEdfId(), $comparison);
+        } elseif ($historique instanceof PropelObjectCollection) {
+            return $this
+                ->useHistoriqueQuery()
+                ->filterByPrimaryKeys($historique->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByHistorique() only accepts arguments of type Historique or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Historique relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CompteEdfQuery The current query, for fluid interface
+     */
+    public function joinHistorique($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Historique');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Historique');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Historique relation Historique object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Happster\Model\HistoriqueQuery A secondary query class using the current class as primary query
+     */
+    public function useHistoriqueQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinHistorique($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Historique', '\Happster\Model\HistoriqueQuery');
+    }
+
+    /**
+     * Filter the query by a related CompteEdfPoste object
+     *
+     * @param   CompteEdfPoste|PropelObjectCollection $compteEdfPoste  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CompteEdfQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCompteEdfPoste($compteEdfPoste, $comparison = null)
+    {
+        if ($compteEdfPoste instanceof CompteEdfPoste) {
+            return $this
+                ->addUsingAlias(CompteEdfPeer::ID, $compteEdfPoste->getCompteEdfId(), $comparison);
+        } elseif ($compteEdfPoste instanceof PropelObjectCollection) {
+            return $this
+                ->useCompteEdfPosteQuery()
+                ->filterByPrimaryKeys($compteEdfPoste->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCompteEdfPoste() only accepts arguments of type CompteEdfPoste or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CompteEdfPoste relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CompteEdfQuery The current query, for fluid interface
+     */
+    public function joinCompteEdfPoste($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CompteEdfPoste');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CompteEdfPoste');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CompteEdfPoste relation CompteEdfPoste object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Happster\Model\CompteEdfPosteQuery A secondary query class using the current class as primary query
+     */
+    public function useCompteEdfPosteQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinCompteEdfPoste($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CompteEdfPoste', '\Happster\Model\CompteEdfPosteQuery');
+    }
+
+    /**
+     * Filter the query by a related Activite object
+     *
+     * @param   Activite|PropelObjectCollection $activite  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CompteEdfQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByActivite($activite, $comparison = null)
+    {
+        if ($activite instanceof Activite) {
+            return $this
+                ->addUsingAlias(CompteEdfPeer::ID, $activite->getCompteEdfId(), $comparison);
+        } elseif ($activite instanceof PropelObjectCollection) {
+            return $this
+                ->useActiviteQuery()
+                ->filterByPrimaryKeys($activite->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByActivite() only accepts arguments of type Activite or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Activite relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CompteEdfQuery The current query, for fluid interface
+     */
+    public function joinActivite($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Activite');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Activite');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Activite relation Activite object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Happster\Model\ActiviteQuery A secondary query class using the current class as primary query
+     */
+    public function useActiviteQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinActivite($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Activite', '\Happster\Model\ActiviteQuery');
     }
 
     /**

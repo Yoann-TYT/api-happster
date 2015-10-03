@@ -9,6 +9,7 @@ use \PDOStatement;
 use \Propel;
 use \PropelException;
 use \PropelPDO;
+use Happster\Model\CompteEdfPeer;
 use Happster\Model\Historique;
 use Happster\Model\HistoriquePeer;
 use Happster\Model\UserPeer;
@@ -37,13 +38,13 @@ abstract class BaseHistoriquePeer
     const TM_CLASS = 'Happster\\Model\\map\\HistoriqueTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 9;
+    const NUM_COLUMNS = 10;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 9;
+    const NUM_HYDRATE_COLUMNS = 10;
 
     /** the column name for the id field */
     const ID = 'historique.id';
@@ -59,6 +60,9 @@ abstract class BaseHistoriquePeer
 
     /** the column name for the production field */
     const PRODUCTION = 'historique.production';
+
+    /** the column name for the compte_edf_id field */
+    const COMPTE_EDF_ID = 'historique.compte_edf_id';
 
     /** the column name for the created_by field */
     const CREATED_BY = 'historique.created_by';
@@ -91,12 +95,12 @@ abstract class BaseHistoriquePeer
      * e.g. HistoriquePeer::$fieldNames[HistoriquePeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Time', 'BudgetSouhaite', 'Consommation', 'Production', 'CreatedBy', 'UpdatedBy', 'CreatedAt', 'UpdatedAt', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'time', 'budgetSouhaite', 'consommation', 'production', 'createdBy', 'updatedBy', 'createdAt', 'updatedAt', ),
-        BasePeer::TYPE_COLNAME => array (HistoriquePeer::ID, HistoriquePeer::TIME, HistoriquePeer::BUDGET_SOUHAITE, HistoriquePeer::CONSOMMATION, HistoriquePeer::PRODUCTION, HistoriquePeer::CREATED_BY, HistoriquePeer::UPDATED_BY, HistoriquePeer::CREATED_AT, HistoriquePeer::UPDATED_AT, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TIME', 'BUDGET_SOUHAITE', 'CONSOMMATION', 'PRODUCTION', 'CREATED_BY', 'UPDATED_BY', 'CREATED_AT', 'UPDATED_AT', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'time', 'budget_souhaite', 'consommation', 'production', 'created_by', 'updated_by', 'created_at', 'updated_at', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Time', 'BudgetSouhaite', 'Consommation', 'Production', 'CompteEdfId', 'CreatedBy', 'UpdatedBy', 'CreatedAt', 'UpdatedAt', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'time', 'budgetSouhaite', 'consommation', 'production', 'compteEdfId', 'createdBy', 'updatedBy', 'createdAt', 'updatedAt', ),
+        BasePeer::TYPE_COLNAME => array (HistoriquePeer::ID, HistoriquePeer::TIME, HistoriquePeer::BUDGET_SOUHAITE, HistoriquePeer::CONSOMMATION, HistoriquePeer::PRODUCTION, HistoriquePeer::COMPTE_EDF_ID, HistoriquePeer::CREATED_BY, HistoriquePeer::UPDATED_BY, HistoriquePeer::CREATED_AT, HistoriquePeer::UPDATED_AT, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TIME', 'BUDGET_SOUHAITE', 'CONSOMMATION', 'PRODUCTION', 'COMPTE_EDF_ID', 'CREATED_BY', 'UPDATED_BY', 'CREATED_AT', 'UPDATED_AT', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'time', 'budget_souhaite', 'consommation', 'production', 'compte_edf_id', 'created_by', 'updated_by', 'created_at', 'updated_at', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
     /**
@@ -106,12 +110,12 @@ abstract class BaseHistoriquePeer
      * e.g. HistoriquePeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Time' => 1, 'BudgetSouhaite' => 2, 'Consommation' => 3, 'Production' => 4, 'CreatedBy' => 5, 'UpdatedBy' => 6, 'CreatedAt' => 7, 'UpdatedAt' => 8, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'time' => 1, 'budgetSouhaite' => 2, 'consommation' => 3, 'production' => 4, 'createdBy' => 5, 'updatedBy' => 6, 'createdAt' => 7, 'updatedAt' => 8, ),
-        BasePeer::TYPE_COLNAME => array (HistoriquePeer::ID => 0, HistoriquePeer::TIME => 1, HistoriquePeer::BUDGET_SOUHAITE => 2, HistoriquePeer::CONSOMMATION => 3, HistoriquePeer::PRODUCTION => 4, HistoriquePeer::CREATED_BY => 5, HistoriquePeer::UPDATED_BY => 6, HistoriquePeer::CREATED_AT => 7, HistoriquePeer::UPDATED_AT => 8, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TIME' => 1, 'BUDGET_SOUHAITE' => 2, 'CONSOMMATION' => 3, 'PRODUCTION' => 4, 'CREATED_BY' => 5, 'UPDATED_BY' => 6, 'CREATED_AT' => 7, 'UPDATED_AT' => 8, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'time' => 1, 'budget_souhaite' => 2, 'consommation' => 3, 'production' => 4, 'created_by' => 5, 'updated_by' => 6, 'created_at' => 7, 'updated_at' => 8, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Time' => 1, 'BudgetSouhaite' => 2, 'Consommation' => 3, 'Production' => 4, 'CompteEdfId' => 5, 'CreatedBy' => 6, 'UpdatedBy' => 7, 'CreatedAt' => 8, 'UpdatedAt' => 9, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'time' => 1, 'budgetSouhaite' => 2, 'consommation' => 3, 'production' => 4, 'compteEdfId' => 5, 'createdBy' => 6, 'updatedBy' => 7, 'createdAt' => 8, 'updatedAt' => 9, ),
+        BasePeer::TYPE_COLNAME => array (HistoriquePeer::ID => 0, HistoriquePeer::TIME => 1, HistoriquePeer::BUDGET_SOUHAITE => 2, HistoriquePeer::CONSOMMATION => 3, HistoriquePeer::PRODUCTION => 4, HistoriquePeer::COMPTE_EDF_ID => 5, HistoriquePeer::CREATED_BY => 6, HistoriquePeer::UPDATED_BY => 7, HistoriquePeer::CREATED_AT => 8, HistoriquePeer::UPDATED_AT => 9, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TIME' => 1, 'BUDGET_SOUHAITE' => 2, 'CONSOMMATION' => 3, 'PRODUCTION' => 4, 'COMPTE_EDF_ID' => 5, 'CREATED_BY' => 6, 'UPDATED_BY' => 7, 'CREATED_AT' => 8, 'UPDATED_AT' => 9, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'time' => 1, 'budget_souhaite' => 2, 'consommation' => 3, 'production' => 4, 'compte_edf_id' => 5, 'created_by' => 6, 'updated_by' => 7, 'created_at' => 8, 'updated_at' => 9, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
     /**
@@ -190,6 +194,7 @@ abstract class BaseHistoriquePeer
             $criteria->addSelectColumn(HistoriquePeer::BUDGET_SOUHAITE);
             $criteria->addSelectColumn(HistoriquePeer::CONSOMMATION);
             $criteria->addSelectColumn(HistoriquePeer::PRODUCTION);
+            $criteria->addSelectColumn(HistoriquePeer::COMPTE_EDF_ID);
             $criteria->addSelectColumn(HistoriquePeer::CREATED_BY);
             $criteria->addSelectColumn(HistoriquePeer::UPDATED_BY);
             $criteria->addSelectColumn(HistoriquePeer::CREATED_AT);
@@ -200,6 +205,7 @@ abstract class BaseHistoriquePeer
             $criteria->addSelectColumn($alias . '.budget_souhaite');
             $criteria->addSelectColumn($alias . '.consommation');
             $criteria->addSelectColumn($alias . '.production');
+            $criteria->addSelectColumn($alias . '.compte_edf_id');
             $criteria->addSelectColumn($alias . '.created_by');
             $criteria->addSelectColumn($alias . '.updated_by');
             $criteria->addSelectColumn($alias . '.created_at');
@@ -330,7 +336,7 @@ abstract class BaseHistoriquePeer
     {
         if (Propel::isInstancePoolingEnabled()) {
             if ($key === null) {
-                $key = (string) $obj->getId();
+                $key = serialize(array((string) $obj->getId(), (string) $obj->getCompteEdfId()));
             } // if key === null
             HistoriquePeer::$instances[$key] = $obj;
         }
@@ -353,10 +359,10 @@ abstract class BaseHistoriquePeer
     {
         if (Propel::isInstancePoolingEnabled() && $value !== null) {
             if (is_object($value) && $value instanceof Historique) {
-                $key = (string) $value->getId();
-            } elseif (is_scalar($value)) {
+                $key = serialize(array((string) $value->getId(), (string) $value->getCompteEdfId()));
+            } elseif (is_array($value) && count($value) === 2) {
                 // assume we've been passed a primary key
-                $key = (string) $value;
+                $key = serialize(array((string) $value[0], (string) $value[1]));
             } else {
                 $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or Historique object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
                 throw $e;
@@ -423,11 +429,11 @@ abstract class BaseHistoriquePeer
     public static function getPrimaryKeyHashFromRow($row, $startcol = 0)
     {
         // If the PK cannot be derived from the row, return null.
-        if ($row[$startcol] === null) {
+        if ($row[$startcol] === null && $row[$startcol + 5] === null) {
             return null;
         }
 
-        return (string) $row[$startcol];
+        return serialize(array((string) $row[$startcol], (string) $row[$startcol + 5]));
     }
 
     /**
@@ -442,7 +448,7 @@ abstract class BaseHistoriquePeer
     public static function getPrimaryKeyFromRow($row, $startcol = 0)
     {
 
-        return (int) $row[$startcol];
+        return array((int) $row[$startcol], (int) $row[$startcol + 5]);
     }
 
     /**
@@ -502,6 +508,57 @@ abstract class BaseHistoriquePeer
         }
 
         return array($obj, $col);
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related CompteEdf table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinCompteEdf(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(HistoriquePeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            HistoriquePeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(HistoriquePeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(HistoriquePeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(HistoriquePeer::COMPTE_EDF_ID, CompteEdfPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
     }
 
 
@@ -604,6 +661,73 @@ abstract class BaseHistoriquePeer
         $stmt->closeCursor();
 
         return $count;
+    }
+
+
+    /**
+     * Selects a collection of Historique objects pre-filled with their CompteEdf objects.
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Historique objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinCompteEdf(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(HistoriquePeer::DATABASE_NAME);
+        }
+
+        HistoriquePeer::addSelectColumns($criteria);
+        $startcol = HistoriquePeer::NUM_HYDRATE_COLUMNS;
+        CompteEdfPeer::addSelectColumns($criteria);
+
+        $criteria->addJoin(HistoriquePeer::COMPTE_EDF_ID, CompteEdfPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = HistoriquePeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = HistoriquePeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+
+                $cls = HistoriquePeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                HistoriquePeer::addInstanceToPool($obj1, $key1);
+            } // if $obj1 already loaded
+
+            $key2 = CompteEdfPeer::getPrimaryKeyHashFromRow($row, $startcol);
+            if ($key2 !== null) {
+                $obj2 = CompteEdfPeer::getInstanceFromPool($key2);
+                if (!$obj2) {
+
+                    $cls = CompteEdfPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol);
+                    CompteEdfPeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 already loaded
+
+                // Add the $obj1 (Historique) to $obj2 (CompteEdf)
+                $obj2->addHistorique($obj1);
+
+            } // if joined row was not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
     }
 
 
@@ -777,6 +901,8 @@ abstract class BaseHistoriquePeer
             $con = Propel::getConnection(HistoriquePeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
+        $criteria->addJoin(HistoriquePeer::COMPTE_EDF_ID, CompteEdfPeer::ID, $join_behavior);
+
         $criteria->addJoin(HistoriquePeer::CREATED_BY, UserPeer::ID, $join_behavior);
 
         $criteria->addJoin(HistoriquePeer::UPDATED_BY, UserPeer::ID, $join_behavior);
@@ -815,11 +941,16 @@ abstract class BaseHistoriquePeer
         HistoriquePeer::addSelectColumns($criteria);
         $startcol2 = HistoriquePeer::NUM_HYDRATE_COLUMNS;
 
-        UserPeer::addSelectColumns($criteria);
-        $startcol3 = $startcol2 + UserPeer::NUM_HYDRATE_COLUMNS;
+        CompteEdfPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + CompteEdfPeer::NUM_HYDRATE_COLUMNS;
 
         UserPeer::addSelectColumns($criteria);
         $startcol4 = $startcol3 + UserPeer::NUM_HYDRATE_COLUMNS;
+
+        UserPeer::addSelectColumns($criteria);
+        $startcol5 = $startcol4 + UserPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(HistoriquePeer::COMPTE_EDF_ID, CompteEdfPeer::ID, $join_behavior);
 
         $criteria->addJoin(HistoriquePeer::CREATED_BY, UserPeer::ID, $join_behavior);
 
@@ -842,22 +973,22 @@ abstract class BaseHistoriquePeer
                 HistoriquePeer::addInstanceToPool($obj1, $key1);
             } // if obj1 already loaded
 
-            // Add objects for joined User rows
+            // Add objects for joined CompteEdf rows
 
-            $key2 = UserPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+            $key2 = CompteEdfPeer::getPrimaryKeyHashFromRow($row, $startcol2);
             if ($key2 !== null) {
-                $obj2 = UserPeer::getInstanceFromPool($key2);
+                $obj2 = CompteEdfPeer::getInstanceFromPool($key2);
                 if (!$obj2) {
 
-                    $cls = UserPeer::getOMClass();
+                    $cls = CompteEdfPeer::getOMClass();
 
                     $obj2 = new $cls();
                     $obj2->hydrate($row, $startcol2);
-                    UserPeer::addInstanceToPool($obj2, $key2);
+                    CompteEdfPeer::addInstanceToPool($obj2, $key2);
                 } // if obj2 loaded
 
-                // Add the $obj1 (Historique) to the collection in $obj2 (User)
-                $obj2->addHistoriqueRelatedByCreatedBy($obj1);
+                // Add the $obj1 (Historique) to the collection in $obj2 (CompteEdf)
+                $obj2->addHistorique($obj1);
             } // if joined row not null
 
             // Add objects for joined User rows
@@ -875,7 +1006,25 @@ abstract class BaseHistoriquePeer
                 } // if obj3 loaded
 
                 // Add the $obj1 (Historique) to the collection in $obj3 (User)
-                $obj3->addHistoriqueRelatedByUpdatedBy($obj1);
+                $obj3->addHistoriqueRelatedByCreatedBy($obj1);
+            } // if joined row not null
+
+            // Add objects for joined User rows
+
+            $key4 = UserPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+            if ($key4 !== null) {
+                $obj4 = UserPeer::getInstanceFromPool($key4);
+                if (!$obj4) {
+
+                    $cls = UserPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    UserPeer::addInstanceToPool($obj4, $key4);
+                } // if obj4 loaded
+
+                // Add the $obj1 (Historique) to the collection in $obj4 (User)
+                $obj4->addHistoriqueRelatedByUpdatedBy($obj1);
             } // if joined row not null
 
             $results[] = $obj1;
@@ -883,6 +1032,59 @@ abstract class BaseHistoriquePeer
         $stmt->closeCursor();
 
         return $results;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related CompteEdf table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptCompteEdf(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(HistoriquePeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            HistoriquePeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(HistoriquePeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(HistoriquePeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(HistoriquePeer::CREATED_BY, UserPeer::ID, $join_behavior);
+
+        $criteria->addJoin(HistoriquePeer::UPDATED_BY, UserPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
     }
 
 
@@ -921,6 +1123,8 @@ abstract class BaseHistoriquePeer
         if ($con === null) {
             $con = Propel::getConnection(HistoriquePeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
+
+        $criteria->addJoin(HistoriquePeer::COMPTE_EDF_ID, CompteEdfPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -971,6 +1175,8 @@ abstract class BaseHistoriquePeer
             $con = Propel::getConnection(HistoriquePeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
+        $criteria->addJoin(HistoriquePeer::COMPTE_EDF_ID, CompteEdfPeer::ID, $join_behavior);
+
         $stmt = BasePeer::doCount($criteria, $con);
 
         if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -981,6 +1187,104 @@ abstract class BaseHistoriquePeer
         $stmt->closeCursor();
 
         return $count;
+    }
+
+
+    /**
+     * Selects a collection of Historique objects pre-filled with all related objects except CompteEdf.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Historique objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptCompteEdf(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(HistoriquePeer::DATABASE_NAME);
+        }
+
+        HistoriquePeer::addSelectColumns($criteria);
+        $startcol2 = HistoriquePeer::NUM_HYDRATE_COLUMNS;
+
+        UserPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + UserPeer::NUM_HYDRATE_COLUMNS;
+
+        UserPeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + UserPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(HistoriquePeer::CREATED_BY, UserPeer::ID, $join_behavior);
+
+        $criteria->addJoin(HistoriquePeer::UPDATED_BY, UserPeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = HistoriquePeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = HistoriquePeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = HistoriquePeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                HistoriquePeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined User rows
+
+                $key2 = UserPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = UserPeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = UserPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    UserPeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (Historique) to the collection in $obj2 (User)
+                $obj2->addHistoriqueRelatedByCreatedBy($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined User rows
+
+                $key3 = UserPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+                if ($key3 !== null) {
+                    $obj3 = UserPeer::getInstanceFromPool($key3);
+                    if (!$obj3) {
+
+                        $cls = UserPeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    UserPeer::addInstanceToPool($obj3, $key3);
+                } // if $obj3 already loaded
+
+                // Add the $obj1 (Historique) to the collection in $obj3 (User)
+                $obj3->addHistoriqueRelatedByUpdatedBy($obj1);
+
+            } // if joined row is not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
     }
 
 
@@ -1008,6 +1312,11 @@ abstract class BaseHistoriquePeer
         HistoriquePeer::addSelectColumns($criteria);
         $startcol2 = HistoriquePeer::NUM_HYDRATE_COLUMNS;
 
+        CompteEdfPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + CompteEdfPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(HistoriquePeer::COMPTE_EDF_ID, CompteEdfPeer::ID, $join_behavior);
+
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
@@ -1025,6 +1334,25 @@ abstract class BaseHistoriquePeer
                 $obj1->hydrate($row);
                 HistoriquePeer::addInstanceToPool($obj1, $key1);
             } // if obj1 already loaded
+
+                // Add objects for joined CompteEdf rows
+
+                $key2 = CompteEdfPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = CompteEdfPeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = CompteEdfPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    CompteEdfPeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (Historique) to the collection in $obj2 (CompteEdf)
+                $obj2->addHistorique($obj1);
+
+            } // if joined row is not null
 
             $results[] = $obj1;
         }
@@ -1058,6 +1386,11 @@ abstract class BaseHistoriquePeer
         HistoriquePeer::addSelectColumns($criteria);
         $startcol2 = HistoriquePeer::NUM_HYDRATE_COLUMNS;
 
+        CompteEdfPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + CompteEdfPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(HistoriquePeer::COMPTE_EDF_ID, CompteEdfPeer::ID, $join_behavior);
+
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
@@ -1075,6 +1408,25 @@ abstract class BaseHistoriquePeer
                 $obj1->hydrate($row);
                 HistoriquePeer::addInstanceToPool($obj1, $key1);
             } // if obj1 already loaded
+
+                // Add objects for joined CompteEdf rows
+
+                $key2 = CompteEdfPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = CompteEdfPeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = CompteEdfPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    CompteEdfPeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (Historique) to the collection in $obj2 (CompteEdf)
+                $obj2->addHistorique($obj1);
+
+            } // if joined row is not null
 
             $results[] = $obj1;
         }
@@ -1188,6 +1540,14 @@ abstract class BaseHistoriquePeer
                 $selectCriteria->setPrimaryTableName(HistoriquePeer::TABLE_NAME);
             }
 
+            $comparison = $criteria->getComparison(HistoriquePeer::COMPTE_EDF_ID);
+            $value = $criteria->remove(HistoriquePeer::COMPTE_EDF_ID);
+            if ($value) {
+                $selectCriteria->add(HistoriquePeer::COMPTE_EDF_ID, $value, $comparison);
+            } else {
+                $selectCriteria->setPrimaryTableName(HistoriquePeer::TABLE_NAME);
+            }
+
         } else { // $values is Historique object
             $criteria = $values->buildCriteria(); // gets full criteria
             $selectCriteria = $values->buildPkeyCriteria(); // gets criteria w/ primary key(s)
@@ -1262,10 +1622,18 @@ abstract class BaseHistoriquePeer
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
             $criteria = new Criteria(HistoriquePeer::DATABASE_NAME);
-            $criteria->add(HistoriquePeer::ID, (array) $values, Criteria::IN);
-            // invalidate the cache for this object(s)
-            foreach ((array) $values as $singleval) {
-                HistoriquePeer::removeInstanceFromPool($singleval);
+            // primary key is composite; we therefore, expect
+            // the primary key passed to be an array of pkey values
+            if (count($values) == count($values, COUNT_RECURSIVE)) {
+                // array is not multi-dimensional
+                $values = array($values);
+            }
+            foreach ($values as $value) {
+                $criterion = $criteria->getNewCriterion(HistoriquePeer::ID, $value[0]);
+                $criterion->addAnd($criteria->getNewCriterion(HistoriquePeer::COMPTE_EDF_ID, $value[1]));
+                $criteria->addOr($criterion);
+                // we can invalidate the cache for this single PK
+                HistoriquePeer::removeInstanceFromPool($value);
             }
         }
 
@@ -1328,58 +1696,28 @@ abstract class BaseHistoriquePeer
     }
 
     /**
-     * Retrieve a single object by pkey.
-     *
-     * @param int $pk the primary key.
-     * @param      PropelPDO $con the connection to use
+     * Retrieve object using using composite pkey values.
+     * @param   int $id
+     * @param   int $compte_edf_id
+     * @param      PropelPDO $con
      * @return Historique
      */
-    public static function retrieveByPK($pk, PropelPDO $con = null)
-    {
-
-        if (null !== ($obj = HistoriquePeer::getInstanceFromPool((string) $pk))) {
-            return $obj;
+    public static function retrieveByPK($id, $compte_edf_id, PropelPDO $con = null) {
+        $_instancePoolKey = serialize(array((string) $id, (string) $compte_edf_id));
+         if (null !== ($obj = HistoriquePeer::getInstanceFromPool($_instancePoolKey))) {
+             return $obj;
         }
 
         if ($con === null) {
             $con = Propel::getConnection(HistoriquePeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
-
         $criteria = new Criteria(HistoriquePeer::DATABASE_NAME);
-        $criteria->add(HistoriquePeer::ID, $pk);
-
+        $criteria->add(HistoriquePeer::ID, $id);
+        $criteria->add(HistoriquePeer::COMPTE_EDF_ID, $compte_edf_id);
         $v = HistoriquePeer::doSelect($criteria, $con);
 
-        return !empty($v) > 0 ? $v[0] : null;
+        return !empty($v) ? $v[0] : null;
     }
-
-    /**
-     * Retrieve multiple objects by pkey.
-     *
-     * @param      array $pks List of primary keys
-     * @param      PropelPDO $con the connection to use
-     * @return Historique[]
-     * @throws PropelException Any exceptions caught during processing will be
-     *		 rethrown wrapped into a PropelException.
-     */
-    public static function retrieveByPKs($pks, PropelPDO $con = null)
-    {
-        if ($con === null) {
-            $con = Propel::getConnection(HistoriquePeer::DATABASE_NAME, Propel::CONNECTION_READ);
-        }
-
-        $objs = null;
-        if (empty($pks)) {
-            $objs = array();
-        } else {
-            $criteria = new Criteria(HistoriquePeer::DATABASE_NAME);
-            $criteria->add(HistoriquePeer::ID, $pks, Criteria::IN);
-            $objs = HistoriquePeer::doSelect($criteria, $con);
-        }
-
-        return $objs;
-    }
-
 } // BaseHistoriquePeer
 
 // This is the static code needed to register the TableMap for this table with the main Propel class.

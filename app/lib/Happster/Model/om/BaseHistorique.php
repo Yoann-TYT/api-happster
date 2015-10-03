@@ -13,6 +13,8 @@ use \Propel;
 use \PropelDateTime;
 use \PropelException;
 use \PropelPDO;
+use Happster\Model\CompteEdf;
+use Happster\Model\CompteEdfQuery;
 use Happster\Model\Historique;
 use Happster\Model\HistoriquePeer;
 use Happster\Model\HistoriqueQuery;
@@ -78,6 +80,12 @@ abstract class BaseHistorique extends BaseObject implements Persistent
     protected $production;
 
     /**
+     * The value for the compte_edf_id field.
+     * @var        int
+     */
+    protected $compte_edf_id;
+
+    /**
      * The value for the created_by field.
      * @var        int
      */
@@ -100,6 +108,11 @@ abstract class BaseHistorique extends BaseObject implements Persistent
      * @var        string
      */
     protected $updated_at;
+
+    /**
+     * @var        CompteEdf
+     */
+    protected $aCompteEdf;
 
     /**
      * @var        User
@@ -213,6 +226,17 @@ abstract class BaseHistorique extends BaseObject implements Persistent
     {
 
         return $this->production;
+    }
+
+    /**
+     * Get the [compte_edf_id] column value.
+     *
+     * @return int
+     */
+    public function getCompteEdfId()
+    {
+
+        return $this->compte_edf_id;
     }
 
     /**
@@ -425,6 +449,31 @@ abstract class BaseHistorique extends BaseObject implements Persistent
     } // setProduction()
 
     /**
+     * Set the value of [compte_edf_id] column.
+     *
+     * @param  int $v new value
+     * @return Historique The current object (for fluent API support)
+     */
+    public function setCompteEdfId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->compte_edf_id !== $v) {
+            $this->compte_edf_id = $v;
+            $this->modifiedColumns[] = HistoriquePeer::COMPTE_EDF_ID;
+        }
+
+        if ($this->aCompteEdf !== null && $this->aCompteEdf->getId() !== $v) {
+            $this->aCompteEdf = null;
+        }
+
+
+        return $this;
+    } // setCompteEdfId()
+
+    /**
      * Set the value of [created_by] column.
      *
      * @param  int $v new value
@@ -557,10 +606,11 @@ abstract class BaseHistorique extends BaseObject implements Persistent
             $this->budget_souhaite = ($row[$startcol + 2] !== null) ? (double) $row[$startcol + 2] : null;
             $this->consommation = ($row[$startcol + 3] !== null) ? (double) $row[$startcol + 3] : null;
             $this->production = ($row[$startcol + 4] !== null) ? (double) $row[$startcol + 4] : null;
-            $this->created_by = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
-            $this->updated_by = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
-            $this->created_at = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
-            $this->updated_at = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+            $this->compte_edf_id = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
+            $this->created_by = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
+            $this->updated_by = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
+            $this->created_at = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+            $this->updated_at = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -570,7 +620,7 @@ abstract class BaseHistorique extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 9; // 9 = HistoriquePeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 10; // 10 = HistoriquePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Historique object", $e);
@@ -593,6 +643,9 @@ abstract class BaseHistorique extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
+        if ($this->aCompteEdf !== null && $this->compte_edf_id !== $this->aCompteEdf->getId()) {
+            $this->aCompteEdf = null;
+        }
         if ($this->aUserRelatedByCreatedBy !== null && $this->created_by !== $this->aUserRelatedByCreatedBy->getId()) {
             $this->aUserRelatedByCreatedBy = null;
         }
@@ -638,6 +691,7 @@ abstract class BaseHistorique extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aCompteEdf = null;
             $this->aUserRelatedByCreatedBy = null;
             $this->aUserRelatedByUpdatedBy = null;
         } // if (deep)
@@ -780,6 +834,13 @@ abstract class BaseHistorique extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
+            if ($this->aCompteEdf !== null) {
+                if ($this->aCompteEdf->isModified() || $this->aCompteEdf->isNew()) {
+                    $affectedRows += $this->aCompteEdf->save($con);
+                }
+                $this->setCompteEdf($this->aCompteEdf);
+            }
+
             if ($this->aUserRelatedByCreatedBy !== null) {
                 if ($this->aUserRelatedByCreatedBy->isModified() || $this->aUserRelatedByCreatedBy->isNew()) {
                     $affectedRows += $this->aUserRelatedByCreatedBy->save($con);
@@ -846,6 +907,9 @@ abstract class BaseHistorique extends BaseObject implements Persistent
         if ($this->isColumnModified(HistoriquePeer::PRODUCTION)) {
             $modifiedColumns[':p' . $index++]  = '`production`';
         }
+        if ($this->isColumnModified(HistoriquePeer::COMPTE_EDF_ID)) {
+            $modifiedColumns[':p' . $index++]  = '`compte_edf_id`';
+        }
         if ($this->isColumnModified(HistoriquePeer::CREATED_BY)) {
             $modifiedColumns[':p' . $index++]  = '`created_by`';
         }
@@ -883,6 +947,9 @@ abstract class BaseHistorique extends BaseObject implements Persistent
                         break;
                     case '`production`':
                         $stmt->bindValue($identifier, $this->production, PDO::PARAM_STR);
+                        break;
+                    case '`compte_edf_id`':
+                        $stmt->bindValue($identifier, $this->compte_edf_id, PDO::PARAM_INT);
                         break;
                     case '`created_by`':
                         $stmt->bindValue($identifier, $this->created_by, PDO::PARAM_INT);
@@ -995,6 +1062,12 @@ abstract class BaseHistorique extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
+            if ($this->aCompteEdf !== null) {
+                if (!$this->aCompteEdf->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aCompteEdf->getValidationFailures());
+                }
+            }
+
             if ($this->aUserRelatedByCreatedBy !== null) {
                 if (!$this->aUserRelatedByCreatedBy->validate($columns)) {
                     $failureMap = array_merge($failureMap, $this->aUserRelatedByCreatedBy->getValidationFailures());
@@ -1064,15 +1137,18 @@ abstract class BaseHistorique extends BaseObject implements Persistent
                 return $this->getProduction();
                 break;
             case 5:
-                return $this->getCreatedBy();
+                return $this->getCompteEdfId();
                 break;
             case 6:
-                return $this->getUpdatedBy();
+                return $this->getCreatedBy();
                 break;
             case 7:
-                return $this->getCreatedAt();
+                return $this->getUpdatedBy();
                 break;
             case 8:
+                return $this->getCreatedAt();
+                break;
+            case 9:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1098,10 +1174,10 @@ abstract class BaseHistorique extends BaseObject implements Persistent
      */
     public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['Historique'][$this->getPrimaryKey()])) {
+        if (isset($alreadyDumpedObjects['Historique'][serialize($this->getPrimaryKey())])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Historique'][$this->getPrimaryKey()] = true;
+        $alreadyDumpedObjects['Historique'][serialize($this->getPrimaryKey())] = true;
         $keys = HistoriquePeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
@@ -1109,10 +1185,11 @@ abstract class BaseHistorique extends BaseObject implements Persistent
             $keys[2] => $this->getBudgetSouhaite(),
             $keys[3] => $this->getConsommation(),
             $keys[4] => $this->getProduction(),
-            $keys[5] => $this->getCreatedBy(),
-            $keys[6] => $this->getUpdatedBy(),
-            $keys[7] => $this->getCreatedAt(),
-            $keys[8] => $this->getUpdatedAt(),
+            $keys[5] => $this->getCompteEdfId(),
+            $keys[6] => $this->getCreatedBy(),
+            $keys[7] => $this->getUpdatedBy(),
+            $keys[8] => $this->getCreatedAt(),
+            $keys[9] => $this->getUpdatedAt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1120,6 +1197,9 @@ abstract class BaseHistorique extends BaseObject implements Persistent
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->aCompteEdf) {
+                $result['CompteEdf'] = $this->aCompteEdf->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
             if (null !== $this->aUserRelatedByCreatedBy) {
                 $result['UserRelatedByCreatedBy'] = $this->aUserRelatedByCreatedBy->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
@@ -1176,15 +1256,18 @@ abstract class BaseHistorique extends BaseObject implements Persistent
                 $this->setProduction($value);
                 break;
             case 5:
-                $this->setCreatedBy($value);
+                $this->setCompteEdfId($value);
                 break;
             case 6:
-                $this->setUpdatedBy($value);
+                $this->setCreatedBy($value);
                 break;
             case 7:
-                $this->setCreatedAt($value);
+                $this->setUpdatedBy($value);
                 break;
             case 8:
+                $this->setCreatedAt($value);
+                break;
+            case 9:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1216,10 +1299,11 @@ abstract class BaseHistorique extends BaseObject implements Persistent
         if (array_key_exists($keys[2], $arr)) $this->setBudgetSouhaite($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setConsommation($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setProduction($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setCreatedBy($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setUpdatedBy($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setCreatedAt($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setUpdatedAt($arr[$keys[8]]);
+        if (array_key_exists($keys[5], $arr)) $this->setCompteEdfId($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setCreatedBy($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setUpdatedBy($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setCreatedAt($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setUpdatedAt($arr[$keys[9]]);
     }
 
     /**
@@ -1236,6 +1320,7 @@ abstract class BaseHistorique extends BaseObject implements Persistent
         if ($this->isColumnModified(HistoriquePeer::BUDGET_SOUHAITE)) $criteria->add(HistoriquePeer::BUDGET_SOUHAITE, $this->budget_souhaite);
         if ($this->isColumnModified(HistoriquePeer::CONSOMMATION)) $criteria->add(HistoriquePeer::CONSOMMATION, $this->consommation);
         if ($this->isColumnModified(HistoriquePeer::PRODUCTION)) $criteria->add(HistoriquePeer::PRODUCTION, $this->production);
+        if ($this->isColumnModified(HistoriquePeer::COMPTE_EDF_ID)) $criteria->add(HistoriquePeer::COMPTE_EDF_ID, $this->compte_edf_id);
         if ($this->isColumnModified(HistoriquePeer::CREATED_BY)) $criteria->add(HistoriquePeer::CREATED_BY, $this->created_by);
         if ($this->isColumnModified(HistoriquePeer::UPDATED_BY)) $criteria->add(HistoriquePeer::UPDATED_BY, $this->updated_by);
         if ($this->isColumnModified(HistoriquePeer::CREATED_AT)) $criteria->add(HistoriquePeer::CREATED_AT, $this->created_at);
@@ -1256,28 +1341,35 @@ abstract class BaseHistorique extends BaseObject implements Persistent
     {
         $criteria = new Criteria(HistoriquePeer::DATABASE_NAME);
         $criteria->add(HistoriquePeer::ID, $this->id);
+        $criteria->add(HistoriquePeer::COMPTE_EDF_ID, $this->compte_edf_id);
 
         return $criteria;
     }
 
     /**
-     * Returns the primary key for this object (row).
-     * @return int
+     * Returns the composite primary key for this object.
+     * The array elements will be in same order as specified in XML.
+     * @return array
      */
     public function getPrimaryKey()
     {
-        return $this->getId();
+        $pks = array();
+        $pks[0] = $this->getId();
+        $pks[1] = $this->getCompteEdfId();
+
+        return $pks;
     }
 
     /**
-     * Generic method to set the primary key (id column).
+     * Set the [composite] primary key.
      *
-     * @param  int $key Primary key.
+     * @param array $keys The elements of the composite key (order must match the order in XML file).
      * @return void
      */
-    public function setPrimaryKey($key)
+    public function setPrimaryKey($keys)
     {
-        $this->setId($key);
+        $this->setId($keys[0]);
+        $this->setCompteEdfId($keys[1]);
     }
 
     /**
@@ -1287,7 +1379,7 @@ abstract class BaseHistorique extends BaseObject implements Persistent
     public function isPrimaryKeyNull()
     {
 
-        return null === $this->getId();
+        return (null === $this->getId()) && (null === $this->getCompteEdfId());
     }
 
     /**
@@ -1307,6 +1399,7 @@ abstract class BaseHistorique extends BaseObject implements Persistent
         $copyObj->setBudgetSouhaite($this->getBudgetSouhaite());
         $copyObj->setConsommation($this->getConsommation());
         $copyObj->setProduction($this->getProduction());
+        $copyObj->setCompteEdfId($this->getCompteEdfId());
         $copyObj->setCreatedBy($this->getCreatedBy());
         $copyObj->setUpdatedBy($this->getUpdatedBy());
         $copyObj->setCreatedAt($this->getCreatedAt());
@@ -1367,6 +1460,58 @@ abstract class BaseHistorique extends BaseObject implements Persistent
         }
 
         return self::$peer;
+    }
+
+    /**
+     * Declares an association between this object and a CompteEdf object.
+     *
+     * @param                  CompteEdf $v
+     * @return Historique The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setCompteEdf(CompteEdf $v = null)
+    {
+        if ($v === null) {
+            $this->setCompteEdfId(NULL);
+        } else {
+            $this->setCompteEdfId($v->getId());
+        }
+
+        $this->aCompteEdf = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the CompteEdf object, it will not be re-added.
+        if ($v !== null) {
+            $v->addHistorique($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated CompteEdf object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return CompteEdf The associated CompteEdf object.
+     * @throws PropelException
+     */
+    public function getCompteEdf(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aCompteEdf === null && ($this->compte_edf_id !== null) && $doQuery) {
+            $this->aCompteEdf = CompteEdfQuery::create()->findPk($this->compte_edf_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aCompteEdf->addHistoriques($this);
+             */
+        }
+
+        return $this->aCompteEdf;
     }
 
     /**
@@ -1483,6 +1628,7 @@ abstract class BaseHistorique extends BaseObject implements Persistent
         $this->budget_souhaite = null;
         $this->consommation = null;
         $this->production = null;
+        $this->compte_edf_id = null;
         $this->created_by = null;
         $this->updated_by = null;
         $this->created_at = null;
@@ -1509,6 +1655,9 @@ abstract class BaseHistorique extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->aCompteEdf instanceof Persistent) {
+              $this->aCompteEdf->clearAllReferences($deep);
+            }
             if ($this->aUserRelatedByCreatedBy instanceof Persistent) {
               $this->aUserRelatedByCreatedBy->clearAllReferences($deep);
             }
@@ -1519,6 +1668,7 @@ abstract class BaseHistorique extends BaseObject implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
+        $this->aCompteEdf = null;
         $this->aUserRelatedByCreatedBy = null;
         $this->aUserRelatedByUpdatedBy = null;
     }
