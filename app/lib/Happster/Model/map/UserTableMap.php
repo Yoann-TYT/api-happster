@@ -73,6 +73,16 @@ class UserTableMap extends TableMap
     {
         $this->addRelation('UserRelatedByCreatedBy', 'Happster\\Model\\User', RelationMap::MANY_TO_ONE, array('created_by' => 'id', ), null, null);
         $this->addRelation('UserRelatedByUpdatedBy', 'Happster\\Model\\User', RelationMap::MANY_TO_ONE, array('updated_by' => 'id', ), null, null);
+        $this->addRelation('CompteEdfRelatedByCreatedBy', 'Happster\\Model\\CompteEdf', RelationMap::ONE_TO_MANY, array('id' => 'created_by', ), null, null, 'CompteEdfsRelatedByCreatedBy');
+        $this->addRelation('CompteEdfRelatedByUpdatedBy', 'Happster\\Model\\CompteEdf', RelationMap::ONE_TO_MANY, array('id' => 'updated_by', ), null, null, 'CompteEdfsRelatedByUpdatedBy');
+        $this->addRelation('TarifRelatedByCreatedBy', 'Happster\\Model\\Tarif', RelationMap::ONE_TO_MANY, array('id' => 'created_by', ), null, null, 'TarifsRelatedByCreatedBy');
+        $this->addRelation('TarifRelatedByUpdatedBy', 'Happster\\Model\\Tarif', RelationMap::ONE_TO_MANY, array('id' => 'updated_by', ), null, null, 'TarifsRelatedByUpdatedBy');
+        $this->addRelation('HistoriqueRelatedByCreatedBy', 'Happster\\Model\\Historique', RelationMap::ONE_TO_MANY, array('id' => 'created_by', ), null, null, 'HistoriquesRelatedByCreatedBy');
+        $this->addRelation('HistoriqueRelatedByUpdatedBy', 'Happster\\Model\\Historique', RelationMap::ONE_TO_MANY, array('id' => 'updated_by', ), null, null, 'HistoriquesRelatedByUpdatedBy');
+        $this->addRelation('PosteRelatedByCreatedBy', 'Happster\\Model\\Poste', RelationMap::ONE_TO_MANY, array('id' => 'created_by', ), null, null, 'PostesRelatedByCreatedBy');
+        $this->addRelation('PosteRelatedByUpdatedBy', 'Happster\\Model\\Poste', RelationMap::ONE_TO_MANY, array('id' => 'updated_by', ), null, null, 'PostesRelatedByUpdatedBy');
+        $this->addRelation('ActiviteRelatedByCreatedBy', 'Happster\\Model\\Activite', RelationMap::ONE_TO_MANY, array('id' => 'created_by', ), null, null, 'ActivitesRelatedByCreatedBy');
+        $this->addRelation('ActiviteRelatedByUpdatedBy', 'Happster\\Model\\Activite', RelationMap::ONE_TO_MANY, array('id' => 'updated_by', ), null, null, 'ActivitesRelatedByUpdatedBy');
         $this->addRelation('UserRelatedById0', 'Happster\\Model\\User', RelationMap::ONE_TO_MANY, array('id' => 'created_by', ), null, null, 'UsersRelatedById0');
         $this->addRelation('UserRelatedById1', 'Happster\\Model\\User', RelationMap::ONE_TO_MANY, array('id' => 'updated_by', ), null, null, 'UsersRelatedById1');
     } // buildRelations()

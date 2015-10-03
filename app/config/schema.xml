@@ -25,6 +25,42 @@
         >
     <behavior name="blamable" />
     <behavior name="timestampable" />
+    <table name="compte_edf" phpName="CompteEdf">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="nom" type="varchar" size="255" required="true"/>
+        <column name="prenom" type="varchar" size="255" required="true"/>
+        <column name="adresse" type="varchar" size="255" required="true"/>
+        <column name="ville" type="varchar" size="255" required="true"/>
+        <column name="code_postal" type="integer" size="5" required="true"/>
+        <column name="budget_souhaite" type="integer" size="5" required="true"/>
+        <column name="prix_abonnement" type="integer" size="5" required="true"/>
+    </table>
+    <table name="tarif" phpName="Tarif">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="time" type="timestamp" required="true"/>
+        <column name="production" type="float" size="10" scale="5"></column>
+        <column name="consommation" type="float" size="10" scale="5"></column>
+    </table>
+    <table name="historique" phpName="Historique">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="time" type="timestamp" required="true"/>
+        <column name="budget_souhaite" type="float" size="10" scale="5"></column>
+        <column name="consommation" type="float" size="10" scale="5"></column>
+        <column name="production" type="float" size="10" scale="5"></column>
+    </table>
+    <table name="poste" phpName="Poste">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="nom" type="varchar" size="255" required="true"/>
+        <column name="puissance_max" type="float" size="10" scale="5"></column>
+        <column name="reglage_possible" type="boolean"></column>
+        <column name="producteur" type="boolean" default="false"></column>
+    </table>
+    <table name="activite" phpName="Activite">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="time" type="timestamp" required="true"/>
+        <column name="production" type="float" size="10" scale="5"></column>
+        <column name="consommation" type="float" size="10" scale="5"></column>
+    </table>
     <table name="user" phpName="User">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="first_name" type="varchar" size="255" required="true"/>

@@ -15,6 +15,16 @@ use \PropelDateTime;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
+use Happster\Model\Activite;
+use Happster\Model\ActiviteQuery;
+use Happster\Model\CompteEdf;
+use Happster\Model\CompteEdfQuery;
+use Happster\Model\Historique;
+use Happster\Model\HistoriqueQuery;
+use Happster\Model\Poste;
+use Happster\Model\PosteQuery;
+use Happster\Model\Tarif;
+use Happster\Model\TarifQuery;
 use Happster\Model\User;
 use Happster\Model\UserPeer;
 use Happster\Model\UserQuery;
@@ -124,6 +134,66 @@ abstract class BaseUser extends BaseObject implements Persistent
     protected $aUserRelatedByUpdatedBy;
 
     /**
+     * @var        PropelObjectCollection|CompteEdf[] Collection to store aggregation of CompteEdf objects.
+     */
+    protected $collCompteEdfsRelatedByCreatedBy;
+    protected $collCompteEdfsRelatedByCreatedByPartial;
+
+    /**
+     * @var        PropelObjectCollection|CompteEdf[] Collection to store aggregation of CompteEdf objects.
+     */
+    protected $collCompteEdfsRelatedByUpdatedBy;
+    protected $collCompteEdfsRelatedByUpdatedByPartial;
+
+    /**
+     * @var        PropelObjectCollection|Tarif[] Collection to store aggregation of Tarif objects.
+     */
+    protected $collTarifsRelatedByCreatedBy;
+    protected $collTarifsRelatedByCreatedByPartial;
+
+    /**
+     * @var        PropelObjectCollection|Tarif[] Collection to store aggregation of Tarif objects.
+     */
+    protected $collTarifsRelatedByUpdatedBy;
+    protected $collTarifsRelatedByUpdatedByPartial;
+
+    /**
+     * @var        PropelObjectCollection|Historique[] Collection to store aggregation of Historique objects.
+     */
+    protected $collHistoriquesRelatedByCreatedBy;
+    protected $collHistoriquesRelatedByCreatedByPartial;
+
+    /**
+     * @var        PropelObjectCollection|Historique[] Collection to store aggregation of Historique objects.
+     */
+    protected $collHistoriquesRelatedByUpdatedBy;
+    protected $collHistoriquesRelatedByUpdatedByPartial;
+
+    /**
+     * @var        PropelObjectCollection|Poste[] Collection to store aggregation of Poste objects.
+     */
+    protected $collPostesRelatedByCreatedBy;
+    protected $collPostesRelatedByCreatedByPartial;
+
+    /**
+     * @var        PropelObjectCollection|Poste[] Collection to store aggregation of Poste objects.
+     */
+    protected $collPostesRelatedByUpdatedBy;
+    protected $collPostesRelatedByUpdatedByPartial;
+
+    /**
+     * @var        PropelObjectCollection|Activite[] Collection to store aggregation of Activite objects.
+     */
+    protected $collActivitesRelatedByCreatedBy;
+    protected $collActivitesRelatedByCreatedByPartial;
+
+    /**
+     * @var        PropelObjectCollection|Activite[] Collection to store aggregation of Activite objects.
+     */
+    protected $collActivitesRelatedByUpdatedBy;
+    protected $collActivitesRelatedByUpdatedByPartial;
+
+    /**
      * @var        PropelObjectCollection|User[] Collection to store aggregation of User objects.
      */
     protected $collUsersRelatedById0;
@@ -154,6 +224,66 @@ abstract class BaseUser extends BaseObject implements Persistent
      * @var        boolean
      */
     protected $alreadyInClearAllReferencesDeep = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $compteEdfsRelatedByCreatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $compteEdfsRelatedByUpdatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $tarifsRelatedByCreatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $tarifsRelatedByUpdatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $historiquesRelatedByCreatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $historiquesRelatedByUpdatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $postesRelatedByCreatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $postesRelatedByUpdatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $activitesRelatedByCreatedByScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $activitesRelatedByUpdatedByScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -711,6 +841,26 @@ abstract class BaseUser extends BaseObject implements Persistent
 
             $this->aUserRelatedByCreatedBy = null;
             $this->aUserRelatedByUpdatedBy = null;
+            $this->collCompteEdfsRelatedByCreatedBy = null;
+
+            $this->collCompteEdfsRelatedByUpdatedBy = null;
+
+            $this->collTarifsRelatedByCreatedBy = null;
+
+            $this->collTarifsRelatedByUpdatedBy = null;
+
+            $this->collHistoriquesRelatedByCreatedBy = null;
+
+            $this->collHistoriquesRelatedByUpdatedBy = null;
+
+            $this->collPostesRelatedByCreatedBy = null;
+
+            $this->collPostesRelatedByUpdatedBy = null;
+
+            $this->collActivitesRelatedByCreatedBy = null;
+
+            $this->collActivitesRelatedByUpdatedBy = null;
+
             $this->collUsersRelatedById0 = null;
 
             $this->collUsersRelatedById1 = null;
@@ -878,6 +1028,186 @@ abstract class BaseUser extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->compteEdfsRelatedByCreatedByScheduledForDeletion !== null) {
+                if (!$this->compteEdfsRelatedByCreatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->compteEdfsRelatedByCreatedByScheduledForDeletion as $compteEdfRelatedByCreatedBy) {
+                        // need to save related object because we set the relation to null
+                        $compteEdfRelatedByCreatedBy->save($con);
+                    }
+                    $this->compteEdfsRelatedByCreatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collCompteEdfsRelatedByCreatedBy !== null) {
+                foreach ($this->collCompteEdfsRelatedByCreatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->compteEdfsRelatedByUpdatedByScheduledForDeletion !== null) {
+                if (!$this->compteEdfsRelatedByUpdatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->compteEdfsRelatedByUpdatedByScheduledForDeletion as $compteEdfRelatedByUpdatedBy) {
+                        // need to save related object because we set the relation to null
+                        $compteEdfRelatedByUpdatedBy->save($con);
+                    }
+                    $this->compteEdfsRelatedByUpdatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collCompteEdfsRelatedByUpdatedBy !== null) {
+                foreach ($this->collCompteEdfsRelatedByUpdatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->tarifsRelatedByCreatedByScheduledForDeletion !== null) {
+                if (!$this->tarifsRelatedByCreatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->tarifsRelatedByCreatedByScheduledForDeletion as $tarifRelatedByCreatedBy) {
+                        // need to save related object because we set the relation to null
+                        $tarifRelatedByCreatedBy->save($con);
+                    }
+                    $this->tarifsRelatedByCreatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collTarifsRelatedByCreatedBy !== null) {
+                foreach ($this->collTarifsRelatedByCreatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->tarifsRelatedByUpdatedByScheduledForDeletion !== null) {
+                if (!$this->tarifsRelatedByUpdatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->tarifsRelatedByUpdatedByScheduledForDeletion as $tarifRelatedByUpdatedBy) {
+                        // need to save related object because we set the relation to null
+                        $tarifRelatedByUpdatedBy->save($con);
+                    }
+                    $this->tarifsRelatedByUpdatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collTarifsRelatedByUpdatedBy !== null) {
+                foreach ($this->collTarifsRelatedByUpdatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->historiquesRelatedByCreatedByScheduledForDeletion !== null) {
+                if (!$this->historiquesRelatedByCreatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->historiquesRelatedByCreatedByScheduledForDeletion as $historiqueRelatedByCreatedBy) {
+                        // need to save related object because we set the relation to null
+                        $historiqueRelatedByCreatedBy->save($con);
+                    }
+                    $this->historiquesRelatedByCreatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collHistoriquesRelatedByCreatedBy !== null) {
+                foreach ($this->collHistoriquesRelatedByCreatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->historiquesRelatedByUpdatedByScheduledForDeletion !== null) {
+                if (!$this->historiquesRelatedByUpdatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->historiquesRelatedByUpdatedByScheduledForDeletion as $historiqueRelatedByUpdatedBy) {
+                        // need to save related object because we set the relation to null
+                        $historiqueRelatedByUpdatedBy->save($con);
+                    }
+                    $this->historiquesRelatedByUpdatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collHistoriquesRelatedByUpdatedBy !== null) {
+                foreach ($this->collHistoriquesRelatedByUpdatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->postesRelatedByCreatedByScheduledForDeletion !== null) {
+                if (!$this->postesRelatedByCreatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->postesRelatedByCreatedByScheduledForDeletion as $posteRelatedByCreatedBy) {
+                        // need to save related object because we set the relation to null
+                        $posteRelatedByCreatedBy->save($con);
+                    }
+                    $this->postesRelatedByCreatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPostesRelatedByCreatedBy !== null) {
+                foreach ($this->collPostesRelatedByCreatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->postesRelatedByUpdatedByScheduledForDeletion !== null) {
+                if (!$this->postesRelatedByUpdatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->postesRelatedByUpdatedByScheduledForDeletion as $posteRelatedByUpdatedBy) {
+                        // need to save related object because we set the relation to null
+                        $posteRelatedByUpdatedBy->save($con);
+                    }
+                    $this->postesRelatedByUpdatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPostesRelatedByUpdatedBy !== null) {
+                foreach ($this->collPostesRelatedByUpdatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->activitesRelatedByCreatedByScheduledForDeletion !== null) {
+                if (!$this->activitesRelatedByCreatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->activitesRelatedByCreatedByScheduledForDeletion as $activiteRelatedByCreatedBy) {
+                        // need to save related object because we set the relation to null
+                        $activiteRelatedByCreatedBy->save($con);
+                    }
+                    $this->activitesRelatedByCreatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collActivitesRelatedByCreatedBy !== null) {
+                foreach ($this->collActivitesRelatedByCreatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->activitesRelatedByUpdatedByScheduledForDeletion !== null) {
+                if (!$this->activitesRelatedByUpdatedByScheduledForDeletion->isEmpty()) {
+                    foreach ($this->activitesRelatedByUpdatedByScheduledForDeletion as $activiteRelatedByUpdatedBy) {
+                        // need to save related object because we set the relation to null
+                        $activiteRelatedByUpdatedBy->save($con);
+                    }
+                    $this->activitesRelatedByUpdatedByScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collActivitesRelatedByUpdatedBy !== null) {
+                foreach ($this->collActivitesRelatedByUpdatedBy as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->usersRelatedById0ScheduledForDeletion !== null) {
@@ -1136,6 +1466,86 @@ abstract class BaseUser extends BaseObject implements Persistent
             }
 
 
+                if ($this->collCompteEdfsRelatedByCreatedBy !== null) {
+                    foreach ($this->collCompteEdfsRelatedByCreatedBy as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collCompteEdfsRelatedByUpdatedBy !== null) {
+                    foreach ($this->collCompteEdfsRelatedByUpdatedBy as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collTarifsRelatedByCreatedBy !== null) {
+                    foreach ($this->collTarifsRelatedByCreatedBy as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collTarifsRelatedByUpdatedBy !== null) {
+                    foreach ($this->collTarifsRelatedByUpdatedBy as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collHistoriquesRelatedByCreatedBy !== null) {
+                    foreach ($this->collHistoriquesRelatedByCreatedBy as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collHistoriquesRelatedByUpdatedBy !== null) {
+                    foreach ($this->collHistoriquesRelatedByUpdatedBy as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collPostesRelatedByCreatedBy !== null) {
+                    foreach ($this->collPostesRelatedByCreatedBy as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collPostesRelatedByUpdatedBy !== null) {
+                    foreach ($this->collPostesRelatedByUpdatedBy as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collActivitesRelatedByCreatedBy !== null) {
+                    foreach ($this->collActivitesRelatedByCreatedBy as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collActivitesRelatedByUpdatedBy !== null) {
+                    foreach ($this->collActivitesRelatedByUpdatedBy as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
                 if ($this->collUsersRelatedById0 !== null) {
                     foreach ($this->collUsersRelatedById0 as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
@@ -1272,6 +1682,36 @@ abstract class BaseUser extends BaseObject implements Persistent
             }
             if (null !== $this->aUserRelatedByUpdatedBy) {
                 $result['UserRelatedByUpdatedBy'] = $this->aUserRelatedByUpdatedBy->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collCompteEdfsRelatedByCreatedBy) {
+                $result['CompteEdfsRelatedByCreatedBy'] = $this->collCompteEdfsRelatedByCreatedBy->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collCompteEdfsRelatedByUpdatedBy) {
+                $result['CompteEdfsRelatedByUpdatedBy'] = $this->collCompteEdfsRelatedByUpdatedBy->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collTarifsRelatedByCreatedBy) {
+                $result['TarifsRelatedByCreatedBy'] = $this->collTarifsRelatedByCreatedBy->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collTarifsRelatedByUpdatedBy) {
+                $result['TarifsRelatedByUpdatedBy'] = $this->collTarifsRelatedByUpdatedBy->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collHistoriquesRelatedByCreatedBy) {
+                $result['HistoriquesRelatedByCreatedBy'] = $this->collHistoriquesRelatedByCreatedBy->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collHistoriquesRelatedByUpdatedBy) {
+                $result['HistoriquesRelatedByUpdatedBy'] = $this->collHistoriquesRelatedByUpdatedBy->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPostesRelatedByCreatedBy) {
+                $result['PostesRelatedByCreatedBy'] = $this->collPostesRelatedByCreatedBy->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPostesRelatedByUpdatedBy) {
+                $result['PostesRelatedByUpdatedBy'] = $this->collPostesRelatedByUpdatedBy->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collActivitesRelatedByCreatedBy) {
+                $result['ActivitesRelatedByCreatedBy'] = $this->collActivitesRelatedByCreatedBy->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collActivitesRelatedByUpdatedBy) {
+                $result['ActivitesRelatedByUpdatedBy'] = $this->collActivitesRelatedByUpdatedBy->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collUsersRelatedById0) {
                 $result['UsersRelatedById0'] = $this->collUsersRelatedById0->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1484,6 +1924,66 @@ abstract class BaseUser extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
+            foreach ($this->getCompteEdfsRelatedByCreatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addCompteEdfRelatedByCreatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getCompteEdfsRelatedByUpdatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addCompteEdfRelatedByUpdatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getTarifsRelatedByCreatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addTarifRelatedByCreatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getTarifsRelatedByUpdatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addTarifRelatedByUpdatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getHistoriquesRelatedByCreatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addHistoriqueRelatedByCreatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getHistoriquesRelatedByUpdatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addHistoriqueRelatedByUpdatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getPostesRelatedByCreatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPosteRelatedByCreatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getPostesRelatedByUpdatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPosteRelatedByUpdatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getActivitesRelatedByCreatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addActiviteRelatedByCreatedBy($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getActivitesRelatedByUpdatedBy() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addActiviteRelatedByUpdatedBy($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getUsersRelatedById0() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addUserRelatedById0($relObj->copy($deepCopy));
@@ -1661,12 +2161,2292 @@ abstract class BaseUser extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
+        if ('CompteEdfRelatedByCreatedBy' == $relationName) {
+            $this->initCompteEdfsRelatedByCreatedBy();
+        }
+        if ('CompteEdfRelatedByUpdatedBy' == $relationName) {
+            $this->initCompteEdfsRelatedByUpdatedBy();
+        }
+        if ('TarifRelatedByCreatedBy' == $relationName) {
+            $this->initTarifsRelatedByCreatedBy();
+        }
+        if ('TarifRelatedByUpdatedBy' == $relationName) {
+            $this->initTarifsRelatedByUpdatedBy();
+        }
+        if ('HistoriqueRelatedByCreatedBy' == $relationName) {
+            $this->initHistoriquesRelatedByCreatedBy();
+        }
+        if ('HistoriqueRelatedByUpdatedBy' == $relationName) {
+            $this->initHistoriquesRelatedByUpdatedBy();
+        }
+        if ('PosteRelatedByCreatedBy' == $relationName) {
+            $this->initPostesRelatedByCreatedBy();
+        }
+        if ('PosteRelatedByUpdatedBy' == $relationName) {
+            $this->initPostesRelatedByUpdatedBy();
+        }
+        if ('ActiviteRelatedByCreatedBy' == $relationName) {
+            $this->initActivitesRelatedByCreatedBy();
+        }
+        if ('ActiviteRelatedByUpdatedBy' == $relationName) {
+            $this->initActivitesRelatedByUpdatedBy();
+        }
         if ('UserRelatedById0' == $relationName) {
             $this->initUsersRelatedById0();
         }
         if ('UserRelatedById1' == $relationName) {
             $this->initUsersRelatedById1();
         }
+    }
+
+    /**
+     * Clears out the collCompteEdfsRelatedByCreatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return User The current object (for fluent API support)
+     * @see        addCompteEdfsRelatedByCreatedBy()
+     */
+    public function clearCompteEdfsRelatedByCreatedBy()
+    {
+        $this->collCompteEdfsRelatedByCreatedBy = null; // important to set this to null since that means it is uninitialized
+        $this->collCompteEdfsRelatedByCreatedByPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collCompteEdfsRelatedByCreatedBy collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialCompteEdfsRelatedByCreatedBy($v = true)
+    {
+        $this->collCompteEdfsRelatedByCreatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collCompteEdfsRelatedByCreatedBy collection.
+     *
+     * By default this just sets the collCompteEdfsRelatedByCreatedBy collection to an empty array (like clearcollCompteEdfsRelatedByCreatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initCompteEdfsRelatedByCreatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collCompteEdfsRelatedByCreatedBy && !$overrideExisting) {
+            return;
+        }
+        $this->collCompteEdfsRelatedByCreatedBy = new PropelObjectCollection();
+        $this->collCompteEdfsRelatedByCreatedBy->setModel('CompteEdf');
+    }
+
+    /**
+     * Gets an array of CompteEdf objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this User is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|CompteEdf[] List of CompteEdf objects
+     * @throws PropelException
+     */
+    public function getCompteEdfsRelatedByCreatedBy($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collCompteEdfsRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collCompteEdfsRelatedByCreatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCompteEdfsRelatedByCreatedBy) {
+                // return empty collection
+                $this->initCompteEdfsRelatedByCreatedBy();
+            } else {
+                $collCompteEdfsRelatedByCreatedBy = CompteEdfQuery::create(null, $criteria)
+                    ->filterByUserRelatedByCreatedBy($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collCompteEdfsRelatedByCreatedByPartial && count($collCompteEdfsRelatedByCreatedBy)) {
+                      $this->initCompteEdfsRelatedByCreatedBy(false);
+
+                      foreach ($collCompteEdfsRelatedByCreatedBy as $obj) {
+                        if (false == $this->collCompteEdfsRelatedByCreatedBy->contains($obj)) {
+                          $this->collCompteEdfsRelatedByCreatedBy->append($obj);
+                        }
+                      }
+
+                      $this->collCompteEdfsRelatedByCreatedByPartial = true;
+                    }
+
+                    $collCompteEdfsRelatedByCreatedBy->getInternalIterator()->rewind();
+
+                    return $collCompteEdfsRelatedByCreatedBy;
+                }
+
+                if ($partial && $this->collCompteEdfsRelatedByCreatedBy) {
+                    foreach ($this->collCompteEdfsRelatedByCreatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collCompteEdfsRelatedByCreatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collCompteEdfsRelatedByCreatedBy = $collCompteEdfsRelatedByCreatedBy;
+                $this->collCompteEdfsRelatedByCreatedByPartial = false;
+            }
+        }
+
+        return $this->collCompteEdfsRelatedByCreatedBy;
+    }
+
+    /**
+     * Sets a collection of CompteEdfRelatedByCreatedBy objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $compteEdfsRelatedByCreatedBy A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return User The current object (for fluent API support)
+     */
+    public function setCompteEdfsRelatedByCreatedBy(PropelCollection $compteEdfsRelatedByCreatedBy, PropelPDO $con = null)
+    {
+        $compteEdfsRelatedByCreatedByToDelete = $this->getCompteEdfsRelatedByCreatedBy(new Criteria(), $con)->diff($compteEdfsRelatedByCreatedBy);
+
+
+        $this->compteEdfsRelatedByCreatedByScheduledForDeletion = $compteEdfsRelatedByCreatedByToDelete;
+
+        foreach ($compteEdfsRelatedByCreatedByToDelete as $compteEdfRelatedByCreatedByRemoved) {
+            $compteEdfRelatedByCreatedByRemoved->setUserRelatedByCreatedBy(null);
+        }
+
+        $this->collCompteEdfsRelatedByCreatedBy = null;
+        foreach ($compteEdfsRelatedByCreatedBy as $compteEdfRelatedByCreatedBy) {
+            $this->addCompteEdfRelatedByCreatedBy($compteEdfRelatedByCreatedBy);
+        }
+
+        $this->collCompteEdfsRelatedByCreatedBy = $compteEdfsRelatedByCreatedBy;
+        $this->collCompteEdfsRelatedByCreatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related CompteEdf objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related CompteEdf objects.
+     * @throws PropelException
+     */
+    public function countCompteEdfsRelatedByCreatedBy(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collCompteEdfsRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collCompteEdfsRelatedByCreatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCompteEdfsRelatedByCreatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getCompteEdfsRelatedByCreatedBy());
+            }
+            $query = CompteEdfQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByCreatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collCompteEdfsRelatedByCreatedBy);
+    }
+
+    /**
+     * Method called to associate a CompteEdf object to this object
+     * through the CompteEdf foreign key attribute.
+     *
+     * @param    CompteEdf $l CompteEdf
+     * @return User The current object (for fluent API support)
+     */
+    public function addCompteEdfRelatedByCreatedBy(CompteEdf $l)
+    {
+        if ($this->collCompteEdfsRelatedByCreatedBy === null) {
+            $this->initCompteEdfsRelatedByCreatedBy();
+            $this->collCompteEdfsRelatedByCreatedByPartial = true;
+        }
+
+        if (!in_array($l, $this->collCompteEdfsRelatedByCreatedBy->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddCompteEdfRelatedByCreatedBy($l);
+
+            if ($this->compteEdfsRelatedByCreatedByScheduledForDeletion and $this->compteEdfsRelatedByCreatedByScheduledForDeletion->contains($l)) {
+                $this->compteEdfsRelatedByCreatedByScheduledForDeletion->remove($this->compteEdfsRelatedByCreatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	CompteEdfRelatedByCreatedBy $compteEdfRelatedByCreatedBy The compteEdfRelatedByCreatedBy object to add.
+     */
+    protected function doAddCompteEdfRelatedByCreatedBy($compteEdfRelatedByCreatedBy)
+    {
+        $this->collCompteEdfsRelatedByCreatedBy[]= $compteEdfRelatedByCreatedBy;
+        $compteEdfRelatedByCreatedBy->setUserRelatedByCreatedBy($this);
+    }
+
+    /**
+     * @param	CompteEdfRelatedByCreatedBy $compteEdfRelatedByCreatedBy The compteEdfRelatedByCreatedBy object to remove.
+     * @return User The current object (for fluent API support)
+     */
+    public function removeCompteEdfRelatedByCreatedBy($compteEdfRelatedByCreatedBy)
+    {
+        if ($this->getCompteEdfsRelatedByCreatedBy()->contains($compteEdfRelatedByCreatedBy)) {
+            $this->collCompteEdfsRelatedByCreatedBy->remove($this->collCompteEdfsRelatedByCreatedBy->search($compteEdfRelatedByCreatedBy));
+            if (null === $this->compteEdfsRelatedByCreatedByScheduledForDeletion) {
+                $this->compteEdfsRelatedByCreatedByScheduledForDeletion = clone $this->collCompteEdfsRelatedByCreatedBy;
+                $this->compteEdfsRelatedByCreatedByScheduledForDeletion->clear();
+            }
+            $this->compteEdfsRelatedByCreatedByScheduledForDeletion[]= $compteEdfRelatedByCreatedBy;
+            $compteEdfRelatedByCreatedBy->setUserRelatedByCreatedBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collCompteEdfsRelatedByUpdatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return User The current object (for fluent API support)
+     * @see        addCompteEdfsRelatedByUpdatedBy()
+     */
+    public function clearCompteEdfsRelatedByUpdatedBy()
+    {
+        $this->collCompteEdfsRelatedByUpdatedBy = null; // important to set this to null since that means it is uninitialized
+        $this->collCompteEdfsRelatedByUpdatedByPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collCompteEdfsRelatedByUpdatedBy collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialCompteEdfsRelatedByUpdatedBy($v = true)
+    {
+        $this->collCompteEdfsRelatedByUpdatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collCompteEdfsRelatedByUpdatedBy collection.
+     *
+     * By default this just sets the collCompteEdfsRelatedByUpdatedBy collection to an empty array (like clearcollCompteEdfsRelatedByUpdatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initCompteEdfsRelatedByUpdatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collCompteEdfsRelatedByUpdatedBy && !$overrideExisting) {
+            return;
+        }
+        $this->collCompteEdfsRelatedByUpdatedBy = new PropelObjectCollection();
+        $this->collCompteEdfsRelatedByUpdatedBy->setModel('CompteEdf');
+    }
+
+    /**
+     * Gets an array of CompteEdf objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this User is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|CompteEdf[] List of CompteEdf objects
+     * @throws PropelException
+     */
+    public function getCompteEdfsRelatedByUpdatedBy($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collCompteEdfsRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collCompteEdfsRelatedByUpdatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCompteEdfsRelatedByUpdatedBy) {
+                // return empty collection
+                $this->initCompteEdfsRelatedByUpdatedBy();
+            } else {
+                $collCompteEdfsRelatedByUpdatedBy = CompteEdfQuery::create(null, $criteria)
+                    ->filterByUserRelatedByUpdatedBy($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collCompteEdfsRelatedByUpdatedByPartial && count($collCompteEdfsRelatedByUpdatedBy)) {
+                      $this->initCompteEdfsRelatedByUpdatedBy(false);
+
+                      foreach ($collCompteEdfsRelatedByUpdatedBy as $obj) {
+                        if (false == $this->collCompteEdfsRelatedByUpdatedBy->contains($obj)) {
+                          $this->collCompteEdfsRelatedByUpdatedBy->append($obj);
+                        }
+                      }
+
+                      $this->collCompteEdfsRelatedByUpdatedByPartial = true;
+                    }
+
+                    $collCompteEdfsRelatedByUpdatedBy->getInternalIterator()->rewind();
+
+                    return $collCompteEdfsRelatedByUpdatedBy;
+                }
+
+                if ($partial && $this->collCompteEdfsRelatedByUpdatedBy) {
+                    foreach ($this->collCompteEdfsRelatedByUpdatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collCompteEdfsRelatedByUpdatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collCompteEdfsRelatedByUpdatedBy = $collCompteEdfsRelatedByUpdatedBy;
+                $this->collCompteEdfsRelatedByUpdatedByPartial = false;
+            }
+        }
+
+        return $this->collCompteEdfsRelatedByUpdatedBy;
+    }
+
+    /**
+     * Sets a collection of CompteEdfRelatedByUpdatedBy objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $compteEdfsRelatedByUpdatedBy A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return User The current object (for fluent API support)
+     */
+    public function setCompteEdfsRelatedByUpdatedBy(PropelCollection $compteEdfsRelatedByUpdatedBy, PropelPDO $con = null)
+    {
+        $compteEdfsRelatedByUpdatedByToDelete = $this->getCompteEdfsRelatedByUpdatedBy(new Criteria(), $con)->diff($compteEdfsRelatedByUpdatedBy);
+
+
+        $this->compteEdfsRelatedByUpdatedByScheduledForDeletion = $compteEdfsRelatedByUpdatedByToDelete;
+
+        foreach ($compteEdfsRelatedByUpdatedByToDelete as $compteEdfRelatedByUpdatedByRemoved) {
+            $compteEdfRelatedByUpdatedByRemoved->setUserRelatedByUpdatedBy(null);
+        }
+
+        $this->collCompteEdfsRelatedByUpdatedBy = null;
+        foreach ($compteEdfsRelatedByUpdatedBy as $compteEdfRelatedByUpdatedBy) {
+            $this->addCompteEdfRelatedByUpdatedBy($compteEdfRelatedByUpdatedBy);
+        }
+
+        $this->collCompteEdfsRelatedByUpdatedBy = $compteEdfsRelatedByUpdatedBy;
+        $this->collCompteEdfsRelatedByUpdatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related CompteEdf objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related CompteEdf objects.
+     * @throws PropelException
+     */
+    public function countCompteEdfsRelatedByUpdatedBy(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collCompteEdfsRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collCompteEdfsRelatedByUpdatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCompteEdfsRelatedByUpdatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getCompteEdfsRelatedByUpdatedBy());
+            }
+            $query = CompteEdfQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByUpdatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collCompteEdfsRelatedByUpdatedBy);
+    }
+
+    /**
+     * Method called to associate a CompteEdf object to this object
+     * through the CompteEdf foreign key attribute.
+     *
+     * @param    CompteEdf $l CompteEdf
+     * @return User The current object (for fluent API support)
+     */
+    public function addCompteEdfRelatedByUpdatedBy(CompteEdf $l)
+    {
+        if ($this->collCompteEdfsRelatedByUpdatedBy === null) {
+            $this->initCompteEdfsRelatedByUpdatedBy();
+            $this->collCompteEdfsRelatedByUpdatedByPartial = true;
+        }
+
+        if (!in_array($l, $this->collCompteEdfsRelatedByUpdatedBy->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddCompteEdfRelatedByUpdatedBy($l);
+
+            if ($this->compteEdfsRelatedByUpdatedByScheduledForDeletion and $this->compteEdfsRelatedByUpdatedByScheduledForDeletion->contains($l)) {
+                $this->compteEdfsRelatedByUpdatedByScheduledForDeletion->remove($this->compteEdfsRelatedByUpdatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	CompteEdfRelatedByUpdatedBy $compteEdfRelatedByUpdatedBy The compteEdfRelatedByUpdatedBy object to add.
+     */
+    protected function doAddCompteEdfRelatedByUpdatedBy($compteEdfRelatedByUpdatedBy)
+    {
+        $this->collCompteEdfsRelatedByUpdatedBy[]= $compteEdfRelatedByUpdatedBy;
+        $compteEdfRelatedByUpdatedBy->setUserRelatedByUpdatedBy($this);
+    }
+
+    /**
+     * @param	CompteEdfRelatedByUpdatedBy $compteEdfRelatedByUpdatedBy The compteEdfRelatedByUpdatedBy object to remove.
+     * @return User The current object (for fluent API support)
+     */
+    public function removeCompteEdfRelatedByUpdatedBy($compteEdfRelatedByUpdatedBy)
+    {
+        if ($this->getCompteEdfsRelatedByUpdatedBy()->contains($compteEdfRelatedByUpdatedBy)) {
+            $this->collCompteEdfsRelatedByUpdatedBy->remove($this->collCompteEdfsRelatedByUpdatedBy->search($compteEdfRelatedByUpdatedBy));
+            if (null === $this->compteEdfsRelatedByUpdatedByScheduledForDeletion) {
+                $this->compteEdfsRelatedByUpdatedByScheduledForDeletion = clone $this->collCompteEdfsRelatedByUpdatedBy;
+                $this->compteEdfsRelatedByUpdatedByScheduledForDeletion->clear();
+            }
+            $this->compteEdfsRelatedByUpdatedByScheduledForDeletion[]= $compteEdfRelatedByUpdatedBy;
+            $compteEdfRelatedByUpdatedBy->setUserRelatedByUpdatedBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collTarifsRelatedByCreatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return User The current object (for fluent API support)
+     * @see        addTarifsRelatedByCreatedBy()
+     */
+    public function clearTarifsRelatedByCreatedBy()
+    {
+        $this->collTarifsRelatedByCreatedBy = null; // important to set this to null since that means it is uninitialized
+        $this->collTarifsRelatedByCreatedByPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collTarifsRelatedByCreatedBy collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialTarifsRelatedByCreatedBy($v = true)
+    {
+        $this->collTarifsRelatedByCreatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collTarifsRelatedByCreatedBy collection.
+     *
+     * By default this just sets the collTarifsRelatedByCreatedBy collection to an empty array (like clearcollTarifsRelatedByCreatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initTarifsRelatedByCreatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collTarifsRelatedByCreatedBy && !$overrideExisting) {
+            return;
+        }
+        $this->collTarifsRelatedByCreatedBy = new PropelObjectCollection();
+        $this->collTarifsRelatedByCreatedBy->setModel('Tarif');
+    }
+
+    /**
+     * Gets an array of Tarif objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this User is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Tarif[] List of Tarif objects
+     * @throws PropelException
+     */
+    public function getTarifsRelatedByCreatedBy($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collTarifsRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collTarifsRelatedByCreatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collTarifsRelatedByCreatedBy) {
+                // return empty collection
+                $this->initTarifsRelatedByCreatedBy();
+            } else {
+                $collTarifsRelatedByCreatedBy = TarifQuery::create(null, $criteria)
+                    ->filterByUserRelatedByCreatedBy($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collTarifsRelatedByCreatedByPartial && count($collTarifsRelatedByCreatedBy)) {
+                      $this->initTarifsRelatedByCreatedBy(false);
+
+                      foreach ($collTarifsRelatedByCreatedBy as $obj) {
+                        if (false == $this->collTarifsRelatedByCreatedBy->contains($obj)) {
+                          $this->collTarifsRelatedByCreatedBy->append($obj);
+                        }
+                      }
+
+                      $this->collTarifsRelatedByCreatedByPartial = true;
+                    }
+
+                    $collTarifsRelatedByCreatedBy->getInternalIterator()->rewind();
+
+                    return $collTarifsRelatedByCreatedBy;
+                }
+
+                if ($partial && $this->collTarifsRelatedByCreatedBy) {
+                    foreach ($this->collTarifsRelatedByCreatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collTarifsRelatedByCreatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collTarifsRelatedByCreatedBy = $collTarifsRelatedByCreatedBy;
+                $this->collTarifsRelatedByCreatedByPartial = false;
+            }
+        }
+
+        return $this->collTarifsRelatedByCreatedBy;
+    }
+
+    /**
+     * Sets a collection of TarifRelatedByCreatedBy objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $tarifsRelatedByCreatedBy A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return User The current object (for fluent API support)
+     */
+    public function setTarifsRelatedByCreatedBy(PropelCollection $tarifsRelatedByCreatedBy, PropelPDO $con = null)
+    {
+        $tarifsRelatedByCreatedByToDelete = $this->getTarifsRelatedByCreatedBy(new Criteria(), $con)->diff($tarifsRelatedByCreatedBy);
+
+
+        $this->tarifsRelatedByCreatedByScheduledForDeletion = $tarifsRelatedByCreatedByToDelete;
+
+        foreach ($tarifsRelatedByCreatedByToDelete as $tarifRelatedByCreatedByRemoved) {
+            $tarifRelatedByCreatedByRemoved->setUserRelatedByCreatedBy(null);
+        }
+
+        $this->collTarifsRelatedByCreatedBy = null;
+        foreach ($tarifsRelatedByCreatedBy as $tarifRelatedByCreatedBy) {
+            $this->addTarifRelatedByCreatedBy($tarifRelatedByCreatedBy);
+        }
+
+        $this->collTarifsRelatedByCreatedBy = $tarifsRelatedByCreatedBy;
+        $this->collTarifsRelatedByCreatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Tarif objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Tarif objects.
+     * @throws PropelException
+     */
+    public function countTarifsRelatedByCreatedBy(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collTarifsRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collTarifsRelatedByCreatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collTarifsRelatedByCreatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getTarifsRelatedByCreatedBy());
+            }
+            $query = TarifQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByCreatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collTarifsRelatedByCreatedBy);
+    }
+
+    /**
+     * Method called to associate a Tarif object to this object
+     * through the Tarif foreign key attribute.
+     *
+     * @param    Tarif $l Tarif
+     * @return User The current object (for fluent API support)
+     */
+    public function addTarifRelatedByCreatedBy(Tarif $l)
+    {
+        if ($this->collTarifsRelatedByCreatedBy === null) {
+            $this->initTarifsRelatedByCreatedBy();
+            $this->collTarifsRelatedByCreatedByPartial = true;
+        }
+
+        if (!in_array($l, $this->collTarifsRelatedByCreatedBy->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddTarifRelatedByCreatedBy($l);
+
+            if ($this->tarifsRelatedByCreatedByScheduledForDeletion and $this->tarifsRelatedByCreatedByScheduledForDeletion->contains($l)) {
+                $this->tarifsRelatedByCreatedByScheduledForDeletion->remove($this->tarifsRelatedByCreatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	TarifRelatedByCreatedBy $tarifRelatedByCreatedBy The tarifRelatedByCreatedBy object to add.
+     */
+    protected function doAddTarifRelatedByCreatedBy($tarifRelatedByCreatedBy)
+    {
+        $this->collTarifsRelatedByCreatedBy[]= $tarifRelatedByCreatedBy;
+        $tarifRelatedByCreatedBy->setUserRelatedByCreatedBy($this);
+    }
+
+    /**
+     * @param	TarifRelatedByCreatedBy $tarifRelatedByCreatedBy The tarifRelatedByCreatedBy object to remove.
+     * @return User The current object (for fluent API support)
+     */
+    public function removeTarifRelatedByCreatedBy($tarifRelatedByCreatedBy)
+    {
+        if ($this->getTarifsRelatedByCreatedBy()->contains($tarifRelatedByCreatedBy)) {
+            $this->collTarifsRelatedByCreatedBy->remove($this->collTarifsRelatedByCreatedBy->search($tarifRelatedByCreatedBy));
+            if (null === $this->tarifsRelatedByCreatedByScheduledForDeletion) {
+                $this->tarifsRelatedByCreatedByScheduledForDeletion = clone $this->collTarifsRelatedByCreatedBy;
+                $this->tarifsRelatedByCreatedByScheduledForDeletion->clear();
+            }
+            $this->tarifsRelatedByCreatedByScheduledForDeletion[]= $tarifRelatedByCreatedBy;
+            $tarifRelatedByCreatedBy->setUserRelatedByCreatedBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collTarifsRelatedByUpdatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return User The current object (for fluent API support)
+     * @see        addTarifsRelatedByUpdatedBy()
+     */
+    public function clearTarifsRelatedByUpdatedBy()
+    {
+        $this->collTarifsRelatedByUpdatedBy = null; // important to set this to null since that means it is uninitialized
+        $this->collTarifsRelatedByUpdatedByPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collTarifsRelatedByUpdatedBy collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialTarifsRelatedByUpdatedBy($v = true)
+    {
+        $this->collTarifsRelatedByUpdatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collTarifsRelatedByUpdatedBy collection.
+     *
+     * By default this just sets the collTarifsRelatedByUpdatedBy collection to an empty array (like clearcollTarifsRelatedByUpdatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initTarifsRelatedByUpdatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collTarifsRelatedByUpdatedBy && !$overrideExisting) {
+            return;
+        }
+        $this->collTarifsRelatedByUpdatedBy = new PropelObjectCollection();
+        $this->collTarifsRelatedByUpdatedBy->setModel('Tarif');
+    }
+
+    /**
+     * Gets an array of Tarif objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this User is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Tarif[] List of Tarif objects
+     * @throws PropelException
+     */
+    public function getTarifsRelatedByUpdatedBy($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collTarifsRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collTarifsRelatedByUpdatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collTarifsRelatedByUpdatedBy) {
+                // return empty collection
+                $this->initTarifsRelatedByUpdatedBy();
+            } else {
+                $collTarifsRelatedByUpdatedBy = TarifQuery::create(null, $criteria)
+                    ->filterByUserRelatedByUpdatedBy($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collTarifsRelatedByUpdatedByPartial && count($collTarifsRelatedByUpdatedBy)) {
+                      $this->initTarifsRelatedByUpdatedBy(false);
+
+                      foreach ($collTarifsRelatedByUpdatedBy as $obj) {
+                        if (false == $this->collTarifsRelatedByUpdatedBy->contains($obj)) {
+                          $this->collTarifsRelatedByUpdatedBy->append($obj);
+                        }
+                      }
+
+                      $this->collTarifsRelatedByUpdatedByPartial = true;
+                    }
+
+                    $collTarifsRelatedByUpdatedBy->getInternalIterator()->rewind();
+
+                    return $collTarifsRelatedByUpdatedBy;
+                }
+
+                if ($partial && $this->collTarifsRelatedByUpdatedBy) {
+                    foreach ($this->collTarifsRelatedByUpdatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collTarifsRelatedByUpdatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collTarifsRelatedByUpdatedBy = $collTarifsRelatedByUpdatedBy;
+                $this->collTarifsRelatedByUpdatedByPartial = false;
+            }
+        }
+
+        return $this->collTarifsRelatedByUpdatedBy;
+    }
+
+    /**
+     * Sets a collection of TarifRelatedByUpdatedBy objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $tarifsRelatedByUpdatedBy A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return User The current object (for fluent API support)
+     */
+    public function setTarifsRelatedByUpdatedBy(PropelCollection $tarifsRelatedByUpdatedBy, PropelPDO $con = null)
+    {
+        $tarifsRelatedByUpdatedByToDelete = $this->getTarifsRelatedByUpdatedBy(new Criteria(), $con)->diff($tarifsRelatedByUpdatedBy);
+
+
+        $this->tarifsRelatedByUpdatedByScheduledForDeletion = $tarifsRelatedByUpdatedByToDelete;
+
+        foreach ($tarifsRelatedByUpdatedByToDelete as $tarifRelatedByUpdatedByRemoved) {
+            $tarifRelatedByUpdatedByRemoved->setUserRelatedByUpdatedBy(null);
+        }
+
+        $this->collTarifsRelatedByUpdatedBy = null;
+        foreach ($tarifsRelatedByUpdatedBy as $tarifRelatedByUpdatedBy) {
+            $this->addTarifRelatedByUpdatedBy($tarifRelatedByUpdatedBy);
+        }
+
+        $this->collTarifsRelatedByUpdatedBy = $tarifsRelatedByUpdatedBy;
+        $this->collTarifsRelatedByUpdatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Tarif objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Tarif objects.
+     * @throws PropelException
+     */
+    public function countTarifsRelatedByUpdatedBy(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collTarifsRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collTarifsRelatedByUpdatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collTarifsRelatedByUpdatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getTarifsRelatedByUpdatedBy());
+            }
+            $query = TarifQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByUpdatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collTarifsRelatedByUpdatedBy);
+    }
+
+    /**
+     * Method called to associate a Tarif object to this object
+     * through the Tarif foreign key attribute.
+     *
+     * @param    Tarif $l Tarif
+     * @return User The current object (for fluent API support)
+     */
+    public function addTarifRelatedByUpdatedBy(Tarif $l)
+    {
+        if ($this->collTarifsRelatedByUpdatedBy === null) {
+            $this->initTarifsRelatedByUpdatedBy();
+            $this->collTarifsRelatedByUpdatedByPartial = true;
+        }
+
+        if (!in_array($l, $this->collTarifsRelatedByUpdatedBy->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddTarifRelatedByUpdatedBy($l);
+
+            if ($this->tarifsRelatedByUpdatedByScheduledForDeletion and $this->tarifsRelatedByUpdatedByScheduledForDeletion->contains($l)) {
+                $this->tarifsRelatedByUpdatedByScheduledForDeletion->remove($this->tarifsRelatedByUpdatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	TarifRelatedByUpdatedBy $tarifRelatedByUpdatedBy The tarifRelatedByUpdatedBy object to add.
+     */
+    protected function doAddTarifRelatedByUpdatedBy($tarifRelatedByUpdatedBy)
+    {
+        $this->collTarifsRelatedByUpdatedBy[]= $tarifRelatedByUpdatedBy;
+        $tarifRelatedByUpdatedBy->setUserRelatedByUpdatedBy($this);
+    }
+
+    /**
+     * @param	TarifRelatedByUpdatedBy $tarifRelatedByUpdatedBy The tarifRelatedByUpdatedBy object to remove.
+     * @return User The current object (for fluent API support)
+     */
+    public function removeTarifRelatedByUpdatedBy($tarifRelatedByUpdatedBy)
+    {
+        if ($this->getTarifsRelatedByUpdatedBy()->contains($tarifRelatedByUpdatedBy)) {
+            $this->collTarifsRelatedByUpdatedBy->remove($this->collTarifsRelatedByUpdatedBy->search($tarifRelatedByUpdatedBy));
+            if (null === $this->tarifsRelatedByUpdatedByScheduledForDeletion) {
+                $this->tarifsRelatedByUpdatedByScheduledForDeletion = clone $this->collTarifsRelatedByUpdatedBy;
+                $this->tarifsRelatedByUpdatedByScheduledForDeletion->clear();
+            }
+            $this->tarifsRelatedByUpdatedByScheduledForDeletion[]= $tarifRelatedByUpdatedBy;
+            $tarifRelatedByUpdatedBy->setUserRelatedByUpdatedBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collHistoriquesRelatedByCreatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return User The current object (for fluent API support)
+     * @see        addHistoriquesRelatedByCreatedBy()
+     */
+    public function clearHistoriquesRelatedByCreatedBy()
+    {
+        $this->collHistoriquesRelatedByCreatedBy = null; // important to set this to null since that means it is uninitialized
+        $this->collHistoriquesRelatedByCreatedByPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collHistoriquesRelatedByCreatedBy collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialHistoriquesRelatedByCreatedBy($v = true)
+    {
+        $this->collHistoriquesRelatedByCreatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collHistoriquesRelatedByCreatedBy collection.
+     *
+     * By default this just sets the collHistoriquesRelatedByCreatedBy collection to an empty array (like clearcollHistoriquesRelatedByCreatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initHistoriquesRelatedByCreatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collHistoriquesRelatedByCreatedBy && !$overrideExisting) {
+            return;
+        }
+        $this->collHistoriquesRelatedByCreatedBy = new PropelObjectCollection();
+        $this->collHistoriquesRelatedByCreatedBy->setModel('Historique');
+    }
+
+    /**
+     * Gets an array of Historique objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this User is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Historique[] List of Historique objects
+     * @throws PropelException
+     */
+    public function getHistoriquesRelatedByCreatedBy($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collHistoriquesRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collHistoriquesRelatedByCreatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collHistoriquesRelatedByCreatedBy) {
+                // return empty collection
+                $this->initHistoriquesRelatedByCreatedBy();
+            } else {
+                $collHistoriquesRelatedByCreatedBy = HistoriqueQuery::create(null, $criteria)
+                    ->filterByUserRelatedByCreatedBy($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collHistoriquesRelatedByCreatedByPartial && count($collHistoriquesRelatedByCreatedBy)) {
+                      $this->initHistoriquesRelatedByCreatedBy(false);
+
+                      foreach ($collHistoriquesRelatedByCreatedBy as $obj) {
+                        if (false == $this->collHistoriquesRelatedByCreatedBy->contains($obj)) {
+                          $this->collHistoriquesRelatedByCreatedBy->append($obj);
+                        }
+                      }
+
+                      $this->collHistoriquesRelatedByCreatedByPartial = true;
+                    }
+
+                    $collHistoriquesRelatedByCreatedBy->getInternalIterator()->rewind();
+
+                    return $collHistoriquesRelatedByCreatedBy;
+                }
+
+                if ($partial && $this->collHistoriquesRelatedByCreatedBy) {
+                    foreach ($this->collHistoriquesRelatedByCreatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collHistoriquesRelatedByCreatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collHistoriquesRelatedByCreatedBy = $collHistoriquesRelatedByCreatedBy;
+                $this->collHistoriquesRelatedByCreatedByPartial = false;
+            }
+        }
+
+        return $this->collHistoriquesRelatedByCreatedBy;
+    }
+
+    /**
+     * Sets a collection of HistoriqueRelatedByCreatedBy objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $historiquesRelatedByCreatedBy A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return User The current object (for fluent API support)
+     */
+    public function setHistoriquesRelatedByCreatedBy(PropelCollection $historiquesRelatedByCreatedBy, PropelPDO $con = null)
+    {
+        $historiquesRelatedByCreatedByToDelete = $this->getHistoriquesRelatedByCreatedBy(new Criteria(), $con)->diff($historiquesRelatedByCreatedBy);
+
+
+        $this->historiquesRelatedByCreatedByScheduledForDeletion = $historiquesRelatedByCreatedByToDelete;
+
+        foreach ($historiquesRelatedByCreatedByToDelete as $historiqueRelatedByCreatedByRemoved) {
+            $historiqueRelatedByCreatedByRemoved->setUserRelatedByCreatedBy(null);
+        }
+
+        $this->collHistoriquesRelatedByCreatedBy = null;
+        foreach ($historiquesRelatedByCreatedBy as $historiqueRelatedByCreatedBy) {
+            $this->addHistoriqueRelatedByCreatedBy($historiqueRelatedByCreatedBy);
+        }
+
+        $this->collHistoriquesRelatedByCreatedBy = $historiquesRelatedByCreatedBy;
+        $this->collHistoriquesRelatedByCreatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Historique objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Historique objects.
+     * @throws PropelException
+     */
+    public function countHistoriquesRelatedByCreatedBy(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collHistoriquesRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collHistoriquesRelatedByCreatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collHistoriquesRelatedByCreatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getHistoriquesRelatedByCreatedBy());
+            }
+            $query = HistoriqueQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByCreatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collHistoriquesRelatedByCreatedBy);
+    }
+
+    /**
+     * Method called to associate a Historique object to this object
+     * through the Historique foreign key attribute.
+     *
+     * @param    Historique $l Historique
+     * @return User The current object (for fluent API support)
+     */
+    public function addHistoriqueRelatedByCreatedBy(Historique $l)
+    {
+        if ($this->collHistoriquesRelatedByCreatedBy === null) {
+            $this->initHistoriquesRelatedByCreatedBy();
+            $this->collHistoriquesRelatedByCreatedByPartial = true;
+        }
+
+        if (!in_array($l, $this->collHistoriquesRelatedByCreatedBy->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddHistoriqueRelatedByCreatedBy($l);
+
+            if ($this->historiquesRelatedByCreatedByScheduledForDeletion and $this->historiquesRelatedByCreatedByScheduledForDeletion->contains($l)) {
+                $this->historiquesRelatedByCreatedByScheduledForDeletion->remove($this->historiquesRelatedByCreatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	HistoriqueRelatedByCreatedBy $historiqueRelatedByCreatedBy The historiqueRelatedByCreatedBy object to add.
+     */
+    protected function doAddHistoriqueRelatedByCreatedBy($historiqueRelatedByCreatedBy)
+    {
+        $this->collHistoriquesRelatedByCreatedBy[]= $historiqueRelatedByCreatedBy;
+        $historiqueRelatedByCreatedBy->setUserRelatedByCreatedBy($this);
+    }
+
+    /**
+     * @param	HistoriqueRelatedByCreatedBy $historiqueRelatedByCreatedBy The historiqueRelatedByCreatedBy object to remove.
+     * @return User The current object (for fluent API support)
+     */
+    public function removeHistoriqueRelatedByCreatedBy($historiqueRelatedByCreatedBy)
+    {
+        if ($this->getHistoriquesRelatedByCreatedBy()->contains($historiqueRelatedByCreatedBy)) {
+            $this->collHistoriquesRelatedByCreatedBy->remove($this->collHistoriquesRelatedByCreatedBy->search($historiqueRelatedByCreatedBy));
+            if (null === $this->historiquesRelatedByCreatedByScheduledForDeletion) {
+                $this->historiquesRelatedByCreatedByScheduledForDeletion = clone $this->collHistoriquesRelatedByCreatedBy;
+                $this->historiquesRelatedByCreatedByScheduledForDeletion->clear();
+            }
+            $this->historiquesRelatedByCreatedByScheduledForDeletion[]= $historiqueRelatedByCreatedBy;
+            $historiqueRelatedByCreatedBy->setUserRelatedByCreatedBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collHistoriquesRelatedByUpdatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return User The current object (for fluent API support)
+     * @see        addHistoriquesRelatedByUpdatedBy()
+     */
+    public function clearHistoriquesRelatedByUpdatedBy()
+    {
+        $this->collHistoriquesRelatedByUpdatedBy = null; // important to set this to null since that means it is uninitialized
+        $this->collHistoriquesRelatedByUpdatedByPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collHistoriquesRelatedByUpdatedBy collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialHistoriquesRelatedByUpdatedBy($v = true)
+    {
+        $this->collHistoriquesRelatedByUpdatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collHistoriquesRelatedByUpdatedBy collection.
+     *
+     * By default this just sets the collHistoriquesRelatedByUpdatedBy collection to an empty array (like clearcollHistoriquesRelatedByUpdatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initHistoriquesRelatedByUpdatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collHistoriquesRelatedByUpdatedBy && !$overrideExisting) {
+            return;
+        }
+        $this->collHistoriquesRelatedByUpdatedBy = new PropelObjectCollection();
+        $this->collHistoriquesRelatedByUpdatedBy->setModel('Historique');
+    }
+
+    /**
+     * Gets an array of Historique objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this User is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Historique[] List of Historique objects
+     * @throws PropelException
+     */
+    public function getHistoriquesRelatedByUpdatedBy($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collHistoriquesRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collHistoriquesRelatedByUpdatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collHistoriquesRelatedByUpdatedBy) {
+                // return empty collection
+                $this->initHistoriquesRelatedByUpdatedBy();
+            } else {
+                $collHistoriquesRelatedByUpdatedBy = HistoriqueQuery::create(null, $criteria)
+                    ->filterByUserRelatedByUpdatedBy($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collHistoriquesRelatedByUpdatedByPartial && count($collHistoriquesRelatedByUpdatedBy)) {
+                      $this->initHistoriquesRelatedByUpdatedBy(false);
+
+                      foreach ($collHistoriquesRelatedByUpdatedBy as $obj) {
+                        if (false == $this->collHistoriquesRelatedByUpdatedBy->contains($obj)) {
+                          $this->collHistoriquesRelatedByUpdatedBy->append($obj);
+                        }
+                      }
+
+                      $this->collHistoriquesRelatedByUpdatedByPartial = true;
+                    }
+
+                    $collHistoriquesRelatedByUpdatedBy->getInternalIterator()->rewind();
+
+                    return $collHistoriquesRelatedByUpdatedBy;
+                }
+
+                if ($partial && $this->collHistoriquesRelatedByUpdatedBy) {
+                    foreach ($this->collHistoriquesRelatedByUpdatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collHistoriquesRelatedByUpdatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collHistoriquesRelatedByUpdatedBy = $collHistoriquesRelatedByUpdatedBy;
+                $this->collHistoriquesRelatedByUpdatedByPartial = false;
+            }
+        }
+
+        return $this->collHistoriquesRelatedByUpdatedBy;
+    }
+
+    /**
+     * Sets a collection of HistoriqueRelatedByUpdatedBy objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $historiquesRelatedByUpdatedBy A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return User The current object (for fluent API support)
+     */
+    public function setHistoriquesRelatedByUpdatedBy(PropelCollection $historiquesRelatedByUpdatedBy, PropelPDO $con = null)
+    {
+        $historiquesRelatedByUpdatedByToDelete = $this->getHistoriquesRelatedByUpdatedBy(new Criteria(), $con)->diff($historiquesRelatedByUpdatedBy);
+
+
+        $this->historiquesRelatedByUpdatedByScheduledForDeletion = $historiquesRelatedByUpdatedByToDelete;
+
+        foreach ($historiquesRelatedByUpdatedByToDelete as $historiqueRelatedByUpdatedByRemoved) {
+            $historiqueRelatedByUpdatedByRemoved->setUserRelatedByUpdatedBy(null);
+        }
+
+        $this->collHistoriquesRelatedByUpdatedBy = null;
+        foreach ($historiquesRelatedByUpdatedBy as $historiqueRelatedByUpdatedBy) {
+            $this->addHistoriqueRelatedByUpdatedBy($historiqueRelatedByUpdatedBy);
+        }
+
+        $this->collHistoriquesRelatedByUpdatedBy = $historiquesRelatedByUpdatedBy;
+        $this->collHistoriquesRelatedByUpdatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Historique objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Historique objects.
+     * @throws PropelException
+     */
+    public function countHistoriquesRelatedByUpdatedBy(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collHistoriquesRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collHistoriquesRelatedByUpdatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collHistoriquesRelatedByUpdatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getHistoriquesRelatedByUpdatedBy());
+            }
+            $query = HistoriqueQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByUpdatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collHistoriquesRelatedByUpdatedBy);
+    }
+
+    /**
+     * Method called to associate a Historique object to this object
+     * through the Historique foreign key attribute.
+     *
+     * @param    Historique $l Historique
+     * @return User The current object (for fluent API support)
+     */
+    public function addHistoriqueRelatedByUpdatedBy(Historique $l)
+    {
+        if ($this->collHistoriquesRelatedByUpdatedBy === null) {
+            $this->initHistoriquesRelatedByUpdatedBy();
+            $this->collHistoriquesRelatedByUpdatedByPartial = true;
+        }
+
+        if (!in_array($l, $this->collHistoriquesRelatedByUpdatedBy->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddHistoriqueRelatedByUpdatedBy($l);
+
+            if ($this->historiquesRelatedByUpdatedByScheduledForDeletion and $this->historiquesRelatedByUpdatedByScheduledForDeletion->contains($l)) {
+                $this->historiquesRelatedByUpdatedByScheduledForDeletion->remove($this->historiquesRelatedByUpdatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	HistoriqueRelatedByUpdatedBy $historiqueRelatedByUpdatedBy The historiqueRelatedByUpdatedBy object to add.
+     */
+    protected function doAddHistoriqueRelatedByUpdatedBy($historiqueRelatedByUpdatedBy)
+    {
+        $this->collHistoriquesRelatedByUpdatedBy[]= $historiqueRelatedByUpdatedBy;
+        $historiqueRelatedByUpdatedBy->setUserRelatedByUpdatedBy($this);
+    }
+
+    /**
+     * @param	HistoriqueRelatedByUpdatedBy $historiqueRelatedByUpdatedBy The historiqueRelatedByUpdatedBy object to remove.
+     * @return User The current object (for fluent API support)
+     */
+    public function removeHistoriqueRelatedByUpdatedBy($historiqueRelatedByUpdatedBy)
+    {
+        if ($this->getHistoriquesRelatedByUpdatedBy()->contains($historiqueRelatedByUpdatedBy)) {
+            $this->collHistoriquesRelatedByUpdatedBy->remove($this->collHistoriquesRelatedByUpdatedBy->search($historiqueRelatedByUpdatedBy));
+            if (null === $this->historiquesRelatedByUpdatedByScheduledForDeletion) {
+                $this->historiquesRelatedByUpdatedByScheduledForDeletion = clone $this->collHistoriquesRelatedByUpdatedBy;
+                $this->historiquesRelatedByUpdatedByScheduledForDeletion->clear();
+            }
+            $this->historiquesRelatedByUpdatedByScheduledForDeletion[]= $historiqueRelatedByUpdatedBy;
+            $historiqueRelatedByUpdatedBy->setUserRelatedByUpdatedBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collPostesRelatedByCreatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return User The current object (for fluent API support)
+     * @see        addPostesRelatedByCreatedBy()
+     */
+    public function clearPostesRelatedByCreatedBy()
+    {
+        $this->collPostesRelatedByCreatedBy = null; // important to set this to null since that means it is uninitialized
+        $this->collPostesRelatedByCreatedByPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collPostesRelatedByCreatedBy collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialPostesRelatedByCreatedBy($v = true)
+    {
+        $this->collPostesRelatedByCreatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collPostesRelatedByCreatedBy collection.
+     *
+     * By default this just sets the collPostesRelatedByCreatedBy collection to an empty array (like clearcollPostesRelatedByCreatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPostesRelatedByCreatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collPostesRelatedByCreatedBy && !$overrideExisting) {
+            return;
+        }
+        $this->collPostesRelatedByCreatedBy = new PropelObjectCollection();
+        $this->collPostesRelatedByCreatedBy->setModel('Poste');
+    }
+
+    /**
+     * Gets an array of Poste objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this User is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Poste[] List of Poste objects
+     * @throws PropelException
+     */
+    public function getPostesRelatedByCreatedBy($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collPostesRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collPostesRelatedByCreatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPostesRelatedByCreatedBy) {
+                // return empty collection
+                $this->initPostesRelatedByCreatedBy();
+            } else {
+                $collPostesRelatedByCreatedBy = PosteQuery::create(null, $criteria)
+                    ->filterByUserRelatedByCreatedBy($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collPostesRelatedByCreatedByPartial && count($collPostesRelatedByCreatedBy)) {
+                      $this->initPostesRelatedByCreatedBy(false);
+
+                      foreach ($collPostesRelatedByCreatedBy as $obj) {
+                        if (false == $this->collPostesRelatedByCreatedBy->contains($obj)) {
+                          $this->collPostesRelatedByCreatedBy->append($obj);
+                        }
+                      }
+
+                      $this->collPostesRelatedByCreatedByPartial = true;
+                    }
+
+                    $collPostesRelatedByCreatedBy->getInternalIterator()->rewind();
+
+                    return $collPostesRelatedByCreatedBy;
+                }
+
+                if ($partial && $this->collPostesRelatedByCreatedBy) {
+                    foreach ($this->collPostesRelatedByCreatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collPostesRelatedByCreatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPostesRelatedByCreatedBy = $collPostesRelatedByCreatedBy;
+                $this->collPostesRelatedByCreatedByPartial = false;
+            }
+        }
+
+        return $this->collPostesRelatedByCreatedBy;
+    }
+
+    /**
+     * Sets a collection of PosteRelatedByCreatedBy objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $postesRelatedByCreatedBy A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return User The current object (for fluent API support)
+     */
+    public function setPostesRelatedByCreatedBy(PropelCollection $postesRelatedByCreatedBy, PropelPDO $con = null)
+    {
+        $postesRelatedByCreatedByToDelete = $this->getPostesRelatedByCreatedBy(new Criteria(), $con)->diff($postesRelatedByCreatedBy);
+
+
+        $this->postesRelatedByCreatedByScheduledForDeletion = $postesRelatedByCreatedByToDelete;
+
+        foreach ($postesRelatedByCreatedByToDelete as $posteRelatedByCreatedByRemoved) {
+            $posteRelatedByCreatedByRemoved->setUserRelatedByCreatedBy(null);
+        }
+
+        $this->collPostesRelatedByCreatedBy = null;
+        foreach ($postesRelatedByCreatedBy as $posteRelatedByCreatedBy) {
+            $this->addPosteRelatedByCreatedBy($posteRelatedByCreatedBy);
+        }
+
+        $this->collPostesRelatedByCreatedBy = $postesRelatedByCreatedBy;
+        $this->collPostesRelatedByCreatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Poste objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Poste objects.
+     * @throws PropelException
+     */
+    public function countPostesRelatedByCreatedBy(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collPostesRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collPostesRelatedByCreatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPostesRelatedByCreatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPostesRelatedByCreatedBy());
+            }
+            $query = PosteQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByCreatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collPostesRelatedByCreatedBy);
+    }
+
+    /**
+     * Method called to associate a Poste object to this object
+     * through the Poste foreign key attribute.
+     *
+     * @param    Poste $l Poste
+     * @return User The current object (for fluent API support)
+     */
+    public function addPosteRelatedByCreatedBy(Poste $l)
+    {
+        if ($this->collPostesRelatedByCreatedBy === null) {
+            $this->initPostesRelatedByCreatedBy();
+            $this->collPostesRelatedByCreatedByPartial = true;
+        }
+
+        if (!in_array($l, $this->collPostesRelatedByCreatedBy->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddPosteRelatedByCreatedBy($l);
+
+            if ($this->postesRelatedByCreatedByScheduledForDeletion and $this->postesRelatedByCreatedByScheduledForDeletion->contains($l)) {
+                $this->postesRelatedByCreatedByScheduledForDeletion->remove($this->postesRelatedByCreatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	PosteRelatedByCreatedBy $posteRelatedByCreatedBy The posteRelatedByCreatedBy object to add.
+     */
+    protected function doAddPosteRelatedByCreatedBy($posteRelatedByCreatedBy)
+    {
+        $this->collPostesRelatedByCreatedBy[]= $posteRelatedByCreatedBy;
+        $posteRelatedByCreatedBy->setUserRelatedByCreatedBy($this);
+    }
+
+    /**
+     * @param	PosteRelatedByCreatedBy $posteRelatedByCreatedBy The posteRelatedByCreatedBy object to remove.
+     * @return User The current object (for fluent API support)
+     */
+    public function removePosteRelatedByCreatedBy($posteRelatedByCreatedBy)
+    {
+        if ($this->getPostesRelatedByCreatedBy()->contains($posteRelatedByCreatedBy)) {
+            $this->collPostesRelatedByCreatedBy->remove($this->collPostesRelatedByCreatedBy->search($posteRelatedByCreatedBy));
+            if (null === $this->postesRelatedByCreatedByScheduledForDeletion) {
+                $this->postesRelatedByCreatedByScheduledForDeletion = clone $this->collPostesRelatedByCreatedBy;
+                $this->postesRelatedByCreatedByScheduledForDeletion->clear();
+            }
+            $this->postesRelatedByCreatedByScheduledForDeletion[]= $posteRelatedByCreatedBy;
+            $posteRelatedByCreatedBy->setUserRelatedByCreatedBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collPostesRelatedByUpdatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return User The current object (for fluent API support)
+     * @see        addPostesRelatedByUpdatedBy()
+     */
+    public function clearPostesRelatedByUpdatedBy()
+    {
+        $this->collPostesRelatedByUpdatedBy = null; // important to set this to null since that means it is uninitialized
+        $this->collPostesRelatedByUpdatedByPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collPostesRelatedByUpdatedBy collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialPostesRelatedByUpdatedBy($v = true)
+    {
+        $this->collPostesRelatedByUpdatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collPostesRelatedByUpdatedBy collection.
+     *
+     * By default this just sets the collPostesRelatedByUpdatedBy collection to an empty array (like clearcollPostesRelatedByUpdatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPostesRelatedByUpdatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collPostesRelatedByUpdatedBy && !$overrideExisting) {
+            return;
+        }
+        $this->collPostesRelatedByUpdatedBy = new PropelObjectCollection();
+        $this->collPostesRelatedByUpdatedBy->setModel('Poste');
+    }
+
+    /**
+     * Gets an array of Poste objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this User is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Poste[] List of Poste objects
+     * @throws PropelException
+     */
+    public function getPostesRelatedByUpdatedBy($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collPostesRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collPostesRelatedByUpdatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPostesRelatedByUpdatedBy) {
+                // return empty collection
+                $this->initPostesRelatedByUpdatedBy();
+            } else {
+                $collPostesRelatedByUpdatedBy = PosteQuery::create(null, $criteria)
+                    ->filterByUserRelatedByUpdatedBy($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collPostesRelatedByUpdatedByPartial && count($collPostesRelatedByUpdatedBy)) {
+                      $this->initPostesRelatedByUpdatedBy(false);
+
+                      foreach ($collPostesRelatedByUpdatedBy as $obj) {
+                        if (false == $this->collPostesRelatedByUpdatedBy->contains($obj)) {
+                          $this->collPostesRelatedByUpdatedBy->append($obj);
+                        }
+                      }
+
+                      $this->collPostesRelatedByUpdatedByPartial = true;
+                    }
+
+                    $collPostesRelatedByUpdatedBy->getInternalIterator()->rewind();
+
+                    return $collPostesRelatedByUpdatedBy;
+                }
+
+                if ($partial && $this->collPostesRelatedByUpdatedBy) {
+                    foreach ($this->collPostesRelatedByUpdatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collPostesRelatedByUpdatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPostesRelatedByUpdatedBy = $collPostesRelatedByUpdatedBy;
+                $this->collPostesRelatedByUpdatedByPartial = false;
+            }
+        }
+
+        return $this->collPostesRelatedByUpdatedBy;
+    }
+
+    /**
+     * Sets a collection of PosteRelatedByUpdatedBy objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $postesRelatedByUpdatedBy A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return User The current object (for fluent API support)
+     */
+    public function setPostesRelatedByUpdatedBy(PropelCollection $postesRelatedByUpdatedBy, PropelPDO $con = null)
+    {
+        $postesRelatedByUpdatedByToDelete = $this->getPostesRelatedByUpdatedBy(new Criteria(), $con)->diff($postesRelatedByUpdatedBy);
+
+
+        $this->postesRelatedByUpdatedByScheduledForDeletion = $postesRelatedByUpdatedByToDelete;
+
+        foreach ($postesRelatedByUpdatedByToDelete as $posteRelatedByUpdatedByRemoved) {
+            $posteRelatedByUpdatedByRemoved->setUserRelatedByUpdatedBy(null);
+        }
+
+        $this->collPostesRelatedByUpdatedBy = null;
+        foreach ($postesRelatedByUpdatedBy as $posteRelatedByUpdatedBy) {
+            $this->addPosteRelatedByUpdatedBy($posteRelatedByUpdatedBy);
+        }
+
+        $this->collPostesRelatedByUpdatedBy = $postesRelatedByUpdatedBy;
+        $this->collPostesRelatedByUpdatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Poste objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Poste objects.
+     * @throws PropelException
+     */
+    public function countPostesRelatedByUpdatedBy(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collPostesRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collPostesRelatedByUpdatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPostesRelatedByUpdatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPostesRelatedByUpdatedBy());
+            }
+            $query = PosteQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByUpdatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collPostesRelatedByUpdatedBy);
+    }
+
+    /**
+     * Method called to associate a Poste object to this object
+     * through the Poste foreign key attribute.
+     *
+     * @param    Poste $l Poste
+     * @return User The current object (for fluent API support)
+     */
+    public function addPosteRelatedByUpdatedBy(Poste $l)
+    {
+        if ($this->collPostesRelatedByUpdatedBy === null) {
+            $this->initPostesRelatedByUpdatedBy();
+            $this->collPostesRelatedByUpdatedByPartial = true;
+        }
+
+        if (!in_array($l, $this->collPostesRelatedByUpdatedBy->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddPosteRelatedByUpdatedBy($l);
+
+            if ($this->postesRelatedByUpdatedByScheduledForDeletion and $this->postesRelatedByUpdatedByScheduledForDeletion->contains($l)) {
+                $this->postesRelatedByUpdatedByScheduledForDeletion->remove($this->postesRelatedByUpdatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	PosteRelatedByUpdatedBy $posteRelatedByUpdatedBy The posteRelatedByUpdatedBy object to add.
+     */
+    protected function doAddPosteRelatedByUpdatedBy($posteRelatedByUpdatedBy)
+    {
+        $this->collPostesRelatedByUpdatedBy[]= $posteRelatedByUpdatedBy;
+        $posteRelatedByUpdatedBy->setUserRelatedByUpdatedBy($this);
+    }
+
+    /**
+     * @param	PosteRelatedByUpdatedBy $posteRelatedByUpdatedBy The posteRelatedByUpdatedBy object to remove.
+     * @return User The current object (for fluent API support)
+     */
+    public function removePosteRelatedByUpdatedBy($posteRelatedByUpdatedBy)
+    {
+        if ($this->getPostesRelatedByUpdatedBy()->contains($posteRelatedByUpdatedBy)) {
+            $this->collPostesRelatedByUpdatedBy->remove($this->collPostesRelatedByUpdatedBy->search($posteRelatedByUpdatedBy));
+            if (null === $this->postesRelatedByUpdatedByScheduledForDeletion) {
+                $this->postesRelatedByUpdatedByScheduledForDeletion = clone $this->collPostesRelatedByUpdatedBy;
+                $this->postesRelatedByUpdatedByScheduledForDeletion->clear();
+            }
+            $this->postesRelatedByUpdatedByScheduledForDeletion[]= $posteRelatedByUpdatedBy;
+            $posteRelatedByUpdatedBy->setUserRelatedByUpdatedBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collActivitesRelatedByCreatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return User The current object (for fluent API support)
+     * @see        addActivitesRelatedByCreatedBy()
+     */
+    public function clearActivitesRelatedByCreatedBy()
+    {
+        $this->collActivitesRelatedByCreatedBy = null; // important to set this to null since that means it is uninitialized
+        $this->collActivitesRelatedByCreatedByPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collActivitesRelatedByCreatedBy collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialActivitesRelatedByCreatedBy($v = true)
+    {
+        $this->collActivitesRelatedByCreatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collActivitesRelatedByCreatedBy collection.
+     *
+     * By default this just sets the collActivitesRelatedByCreatedBy collection to an empty array (like clearcollActivitesRelatedByCreatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initActivitesRelatedByCreatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collActivitesRelatedByCreatedBy && !$overrideExisting) {
+            return;
+        }
+        $this->collActivitesRelatedByCreatedBy = new PropelObjectCollection();
+        $this->collActivitesRelatedByCreatedBy->setModel('Activite');
+    }
+
+    /**
+     * Gets an array of Activite objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this User is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Activite[] List of Activite objects
+     * @throws PropelException
+     */
+    public function getActivitesRelatedByCreatedBy($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collActivitesRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collActivitesRelatedByCreatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collActivitesRelatedByCreatedBy) {
+                // return empty collection
+                $this->initActivitesRelatedByCreatedBy();
+            } else {
+                $collActivitesRelatedByCreatedBy = ActiviteQuery::create(null, $criteria)
+                    ->filterByUserRelatedByCreatedBy($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collActivitesRelatedByCreatedByPartial && count($collActivitesRelatedByCreatedBy)) {
+                      $this->initActivitesRelatedByCreatedBy(false);
+
+                      foreach ($collActivitesRelatedByCreatedBy as $obj) {
+                        if (false == $this->collActivitesRelatedByCreatedBy->contains($obj)) {
+                          $this->collActivitesRelatedByCreatedBy->append($obj);
+                        }
+                      }
+
+                      $this->collActivitesRelatedByCreatedByPartial = true;
+                    }
+
+                    $collActivitesRelatedByCreatedBy->getInternalIterator()->rewind();
+
+                    return $collActivitesRelatedByCreatedBy;
+                }
+
+                if ($partial && $this->collActivitesRelatedByCreatedBy) {
+                    foreach ($this->collActivitesRelatedByCreatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collActivitesRelatedByCreatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collActivitesRelatedByCreatedBy = $collActivitesRelatedByCreatedBy;
+                $this->collActivitesRelatedByCreatedByPartial = false;
+            }
+        }
+
+        return $this->collActivitesRelatedByCreatedBy;
+    }
+
+    /**
+     * Sets a collection of ActiviteRelatedByCreatedBy objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $activitesRelatedByCreatedBy A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return User The current object (for fluent API support)
+     */
+    public function setActivitesRelatedByCreatedBy(PropelCollection $activitesRelatedByCreatedBy, PropelPDO $con = null)
+    {
+        $activitesRelatedByCreatedByToDelete = $this->getActivitesRelatedByCreatedBy(new Criteria(), $con)->diff($activitesRelatedByCreatedBy);
+
+
+        $this->activitesRelatedByCreatedByScheduledForDeletion = $activitesRelatedByCreatedByToDelete;
+
+        foreach ($activitesRelatedByCreatedByToDelete as $activiteRelatedByCreatedByRemoved) {
+            $activiteRelatedByCreatedByRemoved->setUserRelatedByCreatedBy(null);
+        }
+
+        $this->collActivitesRelatedByCreatedBy = null;
+        foreach ($activitesRelatedByCreatedBy as $activiteRelatedByCreatedBy) {
+            $this->addActiviteRelatedByCreatedBy($activiteRelatedByCreatedBy);
+        }
+
+        $this->collActivitesRelatedByCreatedBy = $activitesRelatedByCreatedBy;
+        $this->collActivitesRelatedByCreatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Activite objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Activite objects.
+     * @throws PropelException
+     */
+    public function countActivitesRelatedByCreatedBy(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collActivitesRelatedByCreatedByPartial && !$this->isNew();
+        if (null === $this->collActivitesRelatedByCreatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collActivitesRelatedByCreatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getActivitesRelatedByCreatedBy());
+            }
+            $query = ActiviteQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByCreatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collActivitesRelatedByCreatedBy);
+    }
+
+    /**
+     * Method called to associate a Activite object to this object
+     * through the Activite foreign key attribute.
+     *
+     * @param    Activite $l Activite
+     * @return User The current object (for fluent API support)
+     */
+    public function addActiviteRelatedByCreatedBy(Activite $l)
+    {
+        if ($this->collActivitesRelatedByCreatedBy === null) {
+            $this->initActivitesRelatedByCreatedBy();
+            $this->collActivitesRelatedByCreatedByPartial = true;
+        }
+
+        if (!in_array($l, $this->collActivitesRelatedByCreatedBy->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddActiviteRelatedByCreatedBy($l);
+
+            if ($this->activitesRelatedByCreatedByScheduledForDeletion and $this->activitesRelatedByCreatedByScheduledForDeletion->contains($l)) {
+                $this->activitesRelatedByCreatedByScheduledForDeletion->remove($this->activitesRelatedByCreatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	ActiviteRelatedByCreatedBy $activiteRelatedByCreatedBy The activiteRelatedByCreatedBy object to add.
+     */
+    protected function doAddActiviteRelatedByCreatedBy($activiteRelatedByCreatedBy)
+    {
+        $this->collActivitesRelatedByCreatedBy[]= $activiteRelatedByCreatedBy;
+        $activiteRelatedByCreatedBy->setUserRelatedByCreatedBy($this);
+    }
+
+    /**
+     * @param	ActiviteRelatedByCreatedBy $activiteRelatedByCreatedBy The activiteRelatedByCreatedBy object to remove.
+     * @return User The current object (for fluent API support)
+     */
+    public function removeActiviteRelatedByCreatedBy($activiteRelatedByCreatedBy)
+    {
+        if ($this->getActivitesRelatedByCreatedBy()->contains($activiteRelatedByCreatedBy)) {
+            $this->collActivitesRelatedByCreatedBy->remove($this->collActivitesRelatedByCreatedBy->search($activiteRelatedByCreatedBy));
+            if (null === $this->activitesRelatedByCreatedByScheduledForDeletion) {
+                $this->activitesRelatedByCreatedByScheduledForDeletion = clone $this->collActivitesRelatedByCreatedBy;
+                $this->activitesRelatedByCreatedByScheduledForDeletion->clear();
+            }
+            $this->activitesRelatedByCreatedByScheduledForDeletion[]= $activiteRelatedByCreatedBy;
+            $activiteRelatedByCreatedBy->setUserRelatedByCreatedBy(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collActivitesRelatedByUpdatedBy collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return User The current object (for fluent API support)
+     * @see        addActivitesRelatedByUpdatedBy()
+     */
+    public function clearActivitesRelatedByUpdatedBy()
+    {
+        $this->collActivitesRelatedByUpdatedBy = null; // important to set this to null since that means it is uninitialized
+        $this->collActivitesRelatedByUpdatedByPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collActivitesRelatedByUpdatedBy collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialActivitesRelatedByUpdatedBy($v = true)
+    {
+        $this->collActivitesRelatedByUpdatedByPartial = $v;
+    }
+
+    /**
+     * Initializes the collActivitesRelatedByUpdatedBy collection.
+     *
+     * By default this just sets the collActivitesRelatedByUpdatedBy collection to an empty array (like clearcollActivitesRelatedByUpdatedBy());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initActivitesRelatedByUpdatedBy($overrideExisting = true)
+    {
+        if (null !== $this->collActivitesRelatedByUpdatedBy && !$overrideExisting) {
+            return;
+        }
+        $this->collActivitesRelatedByUpdatedBy = new PropelObjectCollection();
+        $this->collActivitesRelatedByUpdatedBy->setModel('Activite');
+    }
+
+    /**
+     * Gets an array of Activite objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this User is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Activite[] List of Activite objects
+     * @throws PropelException
+     */
+    public function getActivitesRelatedByUpdatedBy($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collActivitesRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collActivitesRelatedByUpdatedBy || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collActivitesRelatedByUpdatedBy) {
+                // return empty collection
+                $this->initActivitesRelatedByUpdatedBy();
+            } else {
+                $collActivitesRelatedByUpdatedBy = ActiviteQuery::create(null, $criteria)
+                    ->filterByUserRelatedByUpdatedBy($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collActivitesRelatedByUpdatedByPartial && count($collActivitesRelatedByUpdatedBy)) {
+                      $this->initActivitesRelatedByUpdatedBy(false);
+
+                      foreach ($collActivitesRelatedByUpdatedBy as $obj) {
+                        if (false == $this->collActivitesRelatedByUpdatedBy->contains($obj)) {
+                          $this->collActivitesRelatedByUpdatedBy->append($obj);
+                        }
+                      }
+
+                      $this->collActivitesRelatedByUpdatedByPartial = true;
+                    }
+
+                    $collActivitesRelatedByUpdatedBy->getInternalIterator()->rewind();
+
+                    return $collActivitesRelatedByUpdatedBy;
+                }
+
+                if ($partial && $this->collActivitesRelatedByUpdatedBy) {
+                    foreach ($this->collActivitesRelatedByUpdatedBy as $obj) {
+                        if ($obj->isNew()) {
+                            $collActivitesRelatedByUpdatedBy[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collActivitesRelatedByUpdatedBy = $collActivitesRelatedByUpdatedBy;
+                $this->collActivitesRelatedByUpdatedByPartial = false;
+            }
+        }
+
+        return $this->collActivitesRelatedByUpdatedBy;
+    }
+
+    /**
+     * Sets a collection of ActiviteRelatedByUpdatedBy objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $activitesRelatedByUpdatedBy A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return User The current object (for fluent API support)
+     */
+    public function setActivitesRelatedByUpdatedBy(PropelCollection $activitesRelatedByUpdatedBy, PropelPDO $con = null)
+    {
+        $activitesRelatedByUpdatedByToDelete = $this->getActivitesRelatedByUpdatedBy(new Criteria(), $con)->diff($activitesRelatedByUpdatedBy);
+
+
+        $this->activitesRelatedByUpdatedByScheduledForDeletion = $activitesRelatedByUpdatedByToDelete;
+
+        foreach ($activitesRelatedByUpdatedByToDelete as $activiteRelatedByUpdatedByRemoved) {
+            $activiteRelatedByUpdatedByRemoved->setUserRelatedByUpdatedBy(null);
+        }
+
+        $this->collActivitesRelatedByUpdatedBy = null;
+        foreach ($activitesRelatedByUpdatedBy as $activiteRelatedByUpdatedBy) {
+            $this->addActiviteRelatedByUpdatedBy($activiteRelatedByUpdatedBy);
+        }
+
+        $this->collActivitesRelatedByUpdatedBy = $activitesRelatedByUpdatedBy;
+        $this->collActivitesRelatedByUpdatedByPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Activite objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Activite objects.
+     * @throws PropelException
+     */
+    public function countActivitesRelatedByUpdatedBy(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collActivitesRelatedByUpdatedByPartial && !$this->isNew();
+        if (null === $this->collActivitesRelatedByUpdatedBy || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collActivitesRelatedByUpdatedBy) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getActivitesRelatedByUpdatedBy());
+            }
+            $query = ActiviteQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUserRelatedByUpdatedBy($this)
+                ->count($con);
+        }
+
+        return count($this->collActivitesRelatedByUpdatedBy);
+    }
+
+    /**
+     * Method called to associate a Activite object to this object
+     * through the Activite foreign key attribute.
+     *
+     * @param    Activite $l Activite
+     * @return User The current object (for fluent API support)
+     */
+    public function addActiviteRelatedByUpdatedBy(Activite $l)
+    {
+        if ($this->collActivitesRelatedByUpdatedBy === null) {
+            $this->initActivitesRelatedByUpdatedBy();
+            $this->collActivitesRelatedByUpdatedByPartial = true;
+        }
+
+        if (!in_array($l, $this->collActivitesRelatedByUpdatedBy->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddActiviteRelatedByUpdatedBy($l);
+
+            if ($this->activitesRelatedByUpdatedByScheduledForDeletion and $this->activitesRelatedByUpdatedByScheduledForDeletion->contains($l)) {
+                $this->activitesRelatedByUpdatedByScheduledForDeletion->remove($this->activitesRelatedByUpdatedByScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	ActiviteRelatedByUpdatedBy $activiteRelatedByUpdatedBy The activiteRelatedByUpdatedBy object to add.
+     */
+    protected function doAddActiviteRelatedByUpdatedBy($activiteRelatedByUpdatedBy)
+    {
+        $this->collActivitesRelatedByUpdatedBy[]= $activiteRelatedByUpdatedBy;
+        $activiteRelatedByUpdatedBy->setUserRelatedByUpdatedBy($this);
+    }
+
+    /**
+     * @param	ActiviteRelatedByUpdatedBy $activiteRelatedByUpdatedBy The activiteRelatedByUpdatedBy object to remove.
+     * @return User The current object (for fluent API support)
+     */
+    public function removeActiviteRelatedByUpdatedBy($activiteRelatedByUpdatedBy)
+    {
+        if ($this->getActivitesRelatedByUpdatedBy()->contains($activiteRelatedByUpdatedBy)) {
+            $this->collActivitesRelatedByUpdatedBy->remove($this->collActivitesRelatedByUpdatedBy->search($activiteRelatedByUpdatedBy));
+            if (null === $this->activitesRelatedByUpdatedByScheduledForDeletion) {
+                $this->activitesRelatedByUpdatedByScheduledForDeletion = clone $this->collActivitesRelatedByUpdatedBy;
+                $this->activitesRelatedByUpdatedByScheduledForDeletion->clear();
+            }
+            $this->activitesRelatedByUpdatedByScheduledForDeletion[]= $activiteRelatedByUpdatedBy;
+            $activiteRelatedByUpdatedBy->setUserRelatedByUpdatedBy(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -2157,6 +4937,56 @@ abstract class BaseUser extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->collCompteEdfsRelatedByCreatedBy) {
+                foreach ($this->collCompteEdfsRelatedByCreatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collCompteEdfsRelatedByUpdatedBy) {
+                foreach ($this->collCompteEdfsRelatedByUpdatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collTarifsRelatedByCreatedBy) {
+                foreach ($this->collTarifsRelatedByCreatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collTarifsRelatedByUpdatedBy) {
+                foreach ($this->collTarifsRelatedByUpdatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collHistoriquesRelatedByCreatedBy) {
+                foreach ($this->collHistoriquesRelatedByCreatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collHistoriquesRelatedByUpdatedBy) {
+                foreach ($this->collHistoriquesRelatedByUpdatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collPostesRelatedByCreatedBy) {
+                foreach ($this->collPostesRelatedByCreatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collPostesRelatedByUpdatedBy) {
+                foreach ($this->collPostesRelatedByUpdatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collActivitesRelatedByCreatedBy) {
+                foreach ($this->collActivitesRelatedByCreatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collActivitesRelatedByUpdatedBy) {
+                foreach ($this->collActivitesRelatedByUpdatedBy as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collUsersRelatedById0) {
                 foreach ($this->collUsersRelatedById0 as $o) {
                     $o->clearAllReferences($deep);
@@ -2177,6 +5007,46 @@ abstract class BaseUser extends BaseObject implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
+        if ($this->collCompteEdfsRelatedByCreatedBy instanceof PropelCollection) {
+            $this->collCompteEdfsRelatedByCreatedBy->clearIterator();
+        }
+        $this->collCompteEdfsRelatedByCreatedBy = null;
+        if ($this->collCompteEdfsRelatedByUpdatedBy instanceof PropelCollection) {
+            $this->collCompteEdfsRelatedByUpdatedBy->clearIterator();
+        }
+        $this->collCompteEdfsRelatedByUpdatedBy = null;
+        if ($this->collTarifsRelatedByCreatedBy instanceof PropelCollection) {
+            $this->collTarifsRelatedByCreatedBy->clearIterator();
+        }
+        $this->collTarifsRelatedByCreatedBy = null;
+        if ($this->collTarifsRelatedByUpdatedBy instanceof PropelCollection) {
+            $this->collTarifsRelatedByUpdatedBy->clearIterator();
+        }
+        $this->collTarifsRelatedByUpdatedBy = null;
+        if ($this->collHistoriquesRelatedByCreatedBy instanceof PropelCollection) {
+            $this->collHistoriquesRelatedByCreatedBy->clearIterator();
+        }
+        $this->collHistoriquesRelatedByCreatedBy = null;
+        if ($this->collHistoriquesRelatedByUpdatedBy instanceof PropelCollection) {
+            $this->collHistoriquesRelatedByUpdatedBy->clearIterator();
+        }
+        $this->collHistoriquesRelatedByUpdatedBy = null;
+        if ($this->collPostesRelatedByCreatedBy instanceof PropelCollection) {
+            $this->collPostesRelatedByCreatedBy->clearIterator();
+        }
+        $this->collPostesRelatedByCreatedBy = null;
+        if ($this->collPostesRelatedByUpdatedBy instanceof PropelCollection) {
+            $this->collPostesRelatedByUpdatedBy->clearIterator();
+        }
+        $this->collPostesRelatedByUpdatedBy = null;
+        if ($this->collActivitesRelatedByCreatedBy instanceof PropelCollection) {
+            $this->collActivitesRelatedByCreatedBy->clearIterator();
+        }
+        $this->collActivitesRelatedByCreatedBy = null;
+        if ($this->collActivitesRelatedByUpdatedBy instanceof PropelCollection) {
+            $this->collActivitesRelatedByUpdatedBy->clearIterator();
+        }
+        $this->collActivitesRelatedByUpdatedBy = null;
         if ($this->collUsersRelatedById0 instanceof PropelCollection) {
             $this->collUsersRelatedById0->clearIterator();
         }

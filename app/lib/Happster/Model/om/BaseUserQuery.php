@@ -12,6 +12,11 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
+use Happster\Model\Activite;
+use Happster\Model\CompteEdf;
+use Happster\Model\Historique;
+use Happster\Model\Poste;
+use Happster\Model\Tarif;
 use Happster\Model\User;
 use Happster\Model\UserPeer;
 use Happster\Model\UserQuery;
@@ -56,6 +61,46 @@ use Happster\Model\UserQuery;
  * @method UserQuery leftJoinUserRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserRelatedByUpdatedBy relation
  * @method UserQuery rightJoinUserRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserRelatedByUpdatedBy relation
  * @method UserQuery innerJoinUserRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the UserRelatedByUpdatedBy relation
+ *
+ * @method UserQuery leftJoinCompteEdfRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the CompteEdfRelatedByCreatedBy relation
+ * @method UserQuery rightJoinCompteEdfRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CompteEdfRelatedByCreatedBy relation
+ * @method UserQuery innerJoinCompteEdfRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the CompteEdfRelatedByCreatedBy relation
+ *
+ * @method UserQuery leftJoinCompteEdfRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the CompteEdfRelatedByUpdatedBy relation
+ * @method UserQuery rightJoinCompteEdfRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CompteEdfRelatedByUpdatedBy relation
+ * @method UserQuery innerJoinCompteEdfRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the CompteEdfRelatedByUpdatedBy relation
+ *
+ * @method UserQuery leftJoinTarifRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the TarifRelatedByCreatedBy relation
+ * @method UserQuery rightJoinTarifRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the TarifRelatedByCreatedBy relation
+ * @method UserQuery innerJoinTarifRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the TarifRelatedByCreatedBy relation
+ *
+ * @method UserQuery leftJoinTarifRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the TarifRelatedByUpdatedBy relation
+ * @method UserQuery rightJoinTarifRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the TarifRelatedByUpdatedBy relation
+ * @method UserQuery innerJoinTarifRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the TarifRelatedByUpdatedBy relation
+ *
+ * @method UserQuery leftJoinHistoriqueRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the HistoriqueRelatedByCreatedBy relation
+ * @method UserQuery rightJoinHistoriqueRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the HistoriqueRelatedByCreatedBy relation
+ * @method UserQuery innerJoinHistoriqueRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the HistoriqueRelatedByCreatedBy relation
+ *
+ * @method UserQuery leftJoinHistoriqueRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the HistoriqueRelatedByUpdatedBy relation
+ * @method UserQuery rightJoinHistoriqueRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the HistoriqueRelatedByUpdatedBy relation
+ * @method UserQuery innerJoinHistoriqueRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the HistoriqueRelatedByUpdatedBy relation
+ *
+ * @method UserQuery leftJoinPosteRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the PosteRelatedByCreatedBy relation
+ * @method UserQuery rightJoinPosteRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PosteRelatedByCreatedBy relation
+ * @method UserQuery innerJoinPosteRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the PosteRelatedByCreatedBy relation
+ *
+ * @method UserQuery leftJoinPosteRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the PosteRelatedByUpdatedBy relation
+ * @method UserQuery rightJoinPosteRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PosteRelatedByUpdatedBy relation
+ * @method UserQuery innerJoinPosteRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the PosteRelatedByUpdatedBy relation
+ *
+ * @method UserQuery leftJoinActiviteRelatedByCreatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the ActiviteRelatedByCreatedBy relation
+ * @method UserQuery rightJoinActiviteRelatedByCreatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ActiviteRelatedByCreatedBy relation
+ * @method UserQuery innerJoinActiviteRelatedByCreatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the ActiviteRelatedByCreatedBy relation
+ *
+ * @method UserQuery leftJoinActiviteRelatedByUpdatedBy($relationAlias = null) Adds a LEFT JOIN clause to the query using the ActiviteRelatedByUpdatedBy relation
+ * @method UserQuery rightJoinActiviteRelatedByUpdatedBy($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ActiviteRelatedByUpdatedBy relation
+ * @method UserQuery innerJoinActiviteRelatedByUpdatedBy($relationAlias = null) Adds a INNER JOIN clause to the query using the ActiviteRelatedByUpdatedBy relation
  *
  * @method UserQuery leftJoinUserRelatedById0($relationAlias = null) Adds a LEFT JOIN clause to the query using the UserRelatedById0 relation
  * @method UserQuery rightJoinUserRelatedById0($relationAlias = null) Adds a RIGHT JOIN clause to the query using the UserRelatedById0 relation
@@ -826,6 +871,746 @@ abstract class BaseUserQuery extends ModelCriteria
         return $this
             ->joinUserRelatedByUpdatedBy($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'UserRelatedByUpdatedBy', '\Happster\Model\UserQuery');
+    }
+
+    /**
+     * Filter the query by a related CompteEdf object
+     *
+     * @param   CompteEdf|PropelObjectCollection $compteEdf  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 UserQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCompteEdfRelatedByCreatedBy($compteEdf, $comparison = null)
+    {
+        if ($compteEdf instanceof CompteEdf) {
+            return $this
+                ->addUsingAlias(UserPeer::ID, $compteEdf->getCreatedBy(), $comparison);
+        } elseif ($compteEdf instanceof PropelObjectCollection) {
+            return $this
+                ->useCompteEdfRelatedByCreatedByQuery()
+                ->filterByPrimaryKeys($compteEdf->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCompteEdfRelatedByCreatedBy() only accepts arguments of type CompteEdf or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CompteEdfRelatedByCreatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return UserQuery The current query, for fluid interface
+     */
+    public function joinCompteEdfRelatedByCreatedBy($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CompteEdfRelatedByCreatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CompteEdfRelatedByCreatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CompteEdfRelatedByCreatedBy relation CompteEdf object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Happster\Model\CompteEdfQuery A secondary query class using the current class as primary query
+     */
+    public function useCompteEdfRelatedByCreatedByQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCompteEdfRelatedByCreatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CompteEdfRelatedByCreatedBy', '\Happster\Model\CompteEdfQuery');
+    }
+
+    /**
+     * Filter the query by a related CompteEdf object
+     *
+     * @param   CompteEdf|PropelObjectCollection $compteEdf  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 UserQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCompteEdfRelatedByUpdatedBy($compteEdf, $comparison = null)
+    {
+        if ($compteEdf instanceof CompteEdf) {
+            return $this
+                ->addUsingAlias(UserPeer::ID, $compteEdf->getUpdatedBy(), $comparison);
+        } elseif ($compteEdf instanceof PropelObjectCollection) {
+            return $this
+                ->useCompteEdfRelatedByUpdatedByQuery()
+                ->filterByPrimaryKeys($compteEdf->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCompteEdfRelatedByUpdatedBy() only accepts arguments of type CompteEdf or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CompteEdfRelatedByUpdatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return UserQuery The current query, for fluid interface
+     */
+    public function joinCompteEdfRelatedByUpdatedBy($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CompteEdfRelatedByUpdatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CompteEdfRelatedByUpdatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CompteEdfRelatedByUpdatedBy relation CompteEdf object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Happster\Model\CompteEdfQuery A secondary query class using the current class as primary query
+     */
+    public function useCompteEdfRelatedByUpdatedByQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCompteEdfRelatedByUpdatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CompteEdfRelatedByUpdatedBy', '\Happster\Model\CompteEdfQuery');
+    }
+
+    /**
+     * Filter the query by a related Tarif object
+     *
+     * @param   Tarif|PropelObjectCollection $tarif  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 UserQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByTarifRelatedByCreatedBy($tarif, $comparison = null)
+    {
+        if ($tarif instanceof Tarif) {
+            return $this
+                ->addUsingAlias(UserPeer::ID, $tarif->getCreatedBy(), $comparison);
+        } elseif ($tarif instanceof PropelObjectCollection) {
+            return $this
+                ->useTarifRelatedByCreatedByQuery()
+                ->filterByPrimaryKeys($tarif->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByTarifRelatedByCreatedBy() only accepts arguments of type Tarif or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the TarifRelatedByCreatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return UserQuery The current query, for fluid interface
+     */
+    public function joinTarifRelatedByCreatedBy($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('TarifRelatedByCreatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'TarifRelatedByCreatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the TarifRelatedByCreatedBy relation Tarif object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Happster\Model\TarifQuery A secondary query class using the current class as primary query
+     */
+    public function useTarifRelatedByCreatedByQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinTarifRelatedByCreatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'TarifRelatedByCreatedBy', '\Happster\Model\TarifQuery');
+    }
+
+    /**
+     * Filter the query by a related Tarif object
+     *
+     * @param   Tarif|PropelObjectCollection $tarif  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 UserQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByTarifRelatedByUpdatedBy($tarif, $comparison = null)
+    {
+        if ($tarif instanceof Tarif) {
+            return $this
+                ->addUsingAlias(UserPeer::ID, $tarif->getUpdatedBy(), $comparison);
+        } elseif ($tarif instanceof PropelObjectCollection) {
+            return $this
+                ->useTarifRelatedByUpdatedByQuery()
+                ->filterByPrimaryKeys($tarif->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByTarifRelatedByUpdatedBy() only accepts arguments of type Tarif or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the TarifRelatedByUpdatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return UserQuery The current query, for fluid interface
+     */
+    public function joinTarifRelatedByUpdatedBy($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('TarifRelatedByUpdatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'TarifRelatedByUpdatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the TarifRelatedByUpdatedBy relation Tarif object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Happster\Model\TarifQuery A secondary query class using the current class as primary query
+     */
+    public function useTarifRelatedByUpdatedByQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinTarifRelatedByUpdatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'TarifRelatedByUpdatedBy', '\Happster\Model\TarifQuery');
+    }
+
+    /**
+     * Filter the query by a related Historique object
+     *
+     * @param   Historique|PropelObjectCollection $historique  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 UserQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByHistoriqueRelatedByCreatedBy($historique, $comparison = null)
+    {
+        if ($historique instanceof Historique) {
+            return $this
+                ->addUsingAlias(UserPeer::ID, $historique->getCreatedBy(), $comparison);
+        } elseif ($historique instanceof PropelObjectCollection) {
+            return $this
+                ->useHistoriqueRelatedByCreatedByQuery()
+                ->filterByPrimaryKeys($historique->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByHistoriqueRelatedByCreatedBy() only accepts arguments of type Historique or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the HistoriqueRelatedByCreatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return UserQuery The current query, for fluid interface
+     */
+    public function joinHistoriqueRelatedByCreatedBy($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('HistoriqueRelatedByCreatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'HistoriqueRelatedByCreatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the HistoriqueRelatedByCreatedBy relation Historique object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Happster\Model\HistoriqueQuery A secondary query class using the current class as primary query
+     */
+    public function useHistoriqueRelatedByCreatedByQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinHistoriqueRelatedByCreatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'HistoriqueRelatedByCreatedBy', '\Happster\Model\HistoriqueQuery');
+    }
+
+    /**
+     * Filter the query by a related Historique object
+     *
+     * @param   Historique|PropelObjectCollection $historique  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 UserQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByHistoriqueRelatedByUpdatedBy($historique, $comparison = null)
+    {
+        if ($historique instanceof Historique) {
+            return $this
+                ->addUsingAlias(UserPeer::ID, $historique->getUpdatedBy(), $comparison);
+        } elseif ($historique instanceof PropelObjectCollection) {
+            return $this
+                ->useHistoriqueRelatedByUpdatedByQuery()
+                ->filterByPrimaryKeys($historique->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByHistoriqueRelatedByUpdatedBy() only accepts arguments of type Historique or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the HistoriqueRelatedByUpdatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return UserQuery The current query, for fluid interface
+     */
+    public function joinHistoriqueRelatedByUpdatedBy($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('HistoriqueRelatedByUpdatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'HistoriqueRelatedByUpdatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the HistoriqueRelatedByUpdatedBy relation Historique object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Happster\Model\HistoriqueQuery A secondary query class using the current class as primary query
+     */
+    public function useHistoriqueRelatedByUpdatedByQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinHistoriqueRelatedByUpdatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'HistoriqueRelatedByUpdatedBy', '\Happster\Model\HistoriqueQuery');
+    }
+
+    /**
+     * Filter the query by a related Poste object
+     *
+     * @param   Poste|PropelObjectCollection $poste  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 UserQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByPosteRelatedByCreatedBy($poste, $comparison = null)
+    {
+        if ($poste instanceof Poste) {
+            return $this
+                ->addUsingAlias(UserPeer::ID, $poste->getCreatedBy(), $comparison);
+        } elseif ($poste instanceof PropelObjectCollection) {
+            return $this
+                ->usePosteRelatedByCreatedByQuery()
+                ->filterByPrimaryKeys($poste->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPosteRelatedByCreatedBy() only accepts arguments of type Poste or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PosteRelatedByCreatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return UserQuery The current query, for fluid interface
+     */
+    public function joinPosteRelatedByCreatedBy($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PosteRelatedByCreatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PosteRelatedByCreatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PosteRelatedByCreatedBy relation Poste object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Happster\Model\PosteQuery A secondary query class using the current class as primary query
+     */
+    public function usePosteRelatedByCreatedByQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinPosteRelatedByCreatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PosteRelatedByCreatedBy', '\Happster\Model\PosteQuery');
+    }
+
+    /**
+     * Filter the query by a related Poste object
+     *
+     * @param   Poste|PropelObjectCollection $poste  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 UserQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByPosteRelatedByUpdatedBy($poste, $comparison = null)
+    {
+        if ($poste instanceof Poste) {
+            return $this
+                ->addUsingAlias(UserPeer::ID, $poste->getUpdatedBy(), $comparison);
+        } elseif ($poste instanceof PropelObjectCollection) {
+            return $this
+                ->usePosteRelatedByUpdatedByQuery()
+                ->filterByPrimaryKeys($poste->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPosteRelatedByUpdatedBy() only accepts arguments of type Poste or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PosteRelatedByUpdatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return UserQuery The current query, for fluid interface
+     */
+    public function joinPosteRelatedByUpdatedBy($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PosteRelatedByUpdatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PosteRelatedByUpdatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PosteRelatedByUpdatedBy relation Poste object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Happster\Model\PosteQuery A secondary query class using the current class as primary query
+     */
+    public function usePosteRelatedByUpdatedByQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinPosteRelatedByUpdatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PosteRelatedByUpdatedBy', '\Happster\Model\PosteQuery');
+    }
+
+    /**
+     * Filter the query by a related Activite object
+     *
+     * @param   Activite|PropelObjectCollection $activite  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 UserQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByActiviteRelatedByCreatedBy($activite, $comparison = null)
+    {
+        if ($activite instanceof Activite) {
+            return $this
+                ->addUsingAlias(UserPeer::ID, $activite->getCreatedBy(), $comparison);
+        } elseif ($activite instanceof PropelObjectCollection) {
+            return $this
+                ->useActiviteRelatedByCreatedByQuery()
+                ->filterByPrimaryKeys($activite->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByActiviteRelatedByCreatedBy() only accepts arguments of type Activite or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ActiviteRelatedByCreatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return UserQuery The current query, for fluid interface
+     */
+    public function joinActiviteRelatedByCreatedBy($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ActiviteRelatedByCreatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ActiviteRelatedByCreatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ActiviteRelatedByCreatedBy relation Activite object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Happster\Model\ActiviteQuery A secondary query class using the current class as primary query
+     */
+    public function useActiviteRelatedByCreatedByQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinActiviteRelatedByCreatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ActiviteRelatedByCreatedBy', '\Happster\Model\ActiviteQuery');
+    }
+
+    /**
+     * Filter the query by a related Activite object
+     *
+     * @param   Activite|PropelObjectCollection $activite  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 UserQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByActiviteRelatedByUpdatedBy($activite, $comparison = null)
+    {
+        if ($activite instanceof Activite) {
+            return $this
+                ->addUsingAlias(UserPeer::ID, $activite->getUpdatedBy(), $comparison);
+        } elseif ($activite instanceof PropelObjectCollection) {
+            return $this
+                ->useActiviteRelatedByUpdatedByQuery()
+                ->filterByPrimaryKeys($activite->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByActiviteRelatedByUpdatedBy() only accepts arguments of type Activite or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ActiviteRelatedByUpdatedBy relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return UserQuery The current query, for fluid interface
+     */
+    public function joinActiviteRelatedByUpdatedBy($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ActiviteRelatedByUpdatedBy');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ActiviteRelatedByUpdatedBy');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ActiviteRelatedByUpdatedBy relation Activite object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Happster\Model\ActiviteQuery A secondary query class using the current class as primary query
+     */
+    public function useActiviteRelatedByUpdatedByQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinActiviteRelatedByUpdatedBy($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ActiviteRelatedByUpdatedBy', '\Happster\Model\ActiviteQuery');
     }
 
     /**
