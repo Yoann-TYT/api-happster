@@ -10,8 +10,5 @@ return array(
     'Twig_' => array($vendorDir . '/twig/twig/lib'),
     'Slim\\Extras' => array($vendorDir . '/slim/extras'),
     'Slim' => array($vendorDir . '/slim/slim'),
-    'Psr\\Log\\' => array($vendorDir . '/psr/log'),
-    'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib'),
-    'Doctrine\\Common\\Annotations\\' => array($vendorDir . '/doctrine/annotations/lib'),
     '' => array($baseDir . '/app/lib'),
 );
