@@ -9,7 +9,7 @@ $app = new \Slim\Slim([
     'templates.path' => '../templates',
     'view' => new \Slim\Views\Twig(),
 ]);
-$app->add(new \Happster\Middleware\Security());
+//$app->add(new \Happster\Middleware\Security());
 // View templates
 $view = $app->view();
 $view->parserOptions = array(
