@@ -1,9 +1,9 @@
-# code2beInside
+# API Happster
 
 You need to use composer to install this application.
 
 ```
-~$ composer install
+~$ composer.phar install
 ```
 
 You have to edit app/config/runtime-conf.xml, app/config/build.properties and app/config/parameters.yml for database connection / mailing
