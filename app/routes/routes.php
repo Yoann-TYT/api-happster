@@ -24,7 +24,7 @@
 
     })->name("jauge");
 
-
+// fonction chris
     $app->get('/api/postes_conso', function() use ($app) {
         $app->response->headers->set('Content-Type', 'application/json');
         $app->response->headers->set('Access-Control-Allow-Origin', '*');
