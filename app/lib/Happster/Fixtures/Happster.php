@@ -35,6 +35,13 @@ class Happster {
         $poste->setReglagePossible(true);
         $poste->save();
 
+        $poste = new \Happster\Model\Poste;
+        $poste->setNom('Panneau Solaire');
+        $poste->setPuissanceMax(80);
+        $poste->setReglagePossible(false);
+        $poste->setProducteur(true);
+        $poste->save();
+
         // Tarifs
         $timeStart = mktime(16,0,0,10,3,2015);
         $timeEnd   = mktime(23,50,0,10,4,2015);
@@ -47,8 +54,32 @@ class Happster {
             $tarif->setProduction(round(rand(50, 225)/1000, 2));
             $tarif->setConsommation(round(rand(130, 35)/1000, 2));
             $tarif->save();
+
+            $activite = new \Happster\Model\Activite();
+            $activite->setTime($currTime);
+            $activite->setProduction(round(rand(50, 225)/1000, 2));
+            $activite->setConsommation(round(rand(130, 35)/1000, 2));
+            $activite->setCompteEdf($compteEdf);
+            $activite->save();
+
             $currTime += 15;
         }
+
+
+        // Historique
+        for ($i = 9; $i > 0; $i--) {
+            $historique = new \Happster\Model\Historique();
+            $historique->setTime(mktime(0, 0, 0, $i, 1, 2015));
+            $historique->setBudgetSouhaite(50);
+            $historique->setConsommation(rand(4536, 5697)/100);
+            $historique->setProduction(rand(2349, 3200)/100);
+            $historique->setCompteEdf($compteEdf);
+            $historique->save();
+        }
+
+
+
+
     }
 
 }

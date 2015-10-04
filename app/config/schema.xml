@@ -71,7 +71,6 @@
         <reference local="poste_id" foreign="id"/>
       </foreign-key>
     </table>
-
     <table name="activite" phpName="Activite">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="time" type="timestamp" required="true"/>

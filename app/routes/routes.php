@@ -5,14 +5,15 @@
 
     $app->get('/', function() use ($app) {
 
-	$tarifs = UserQuery::create()
-		->findOne();
-//	var_dump($tarifs->getNom());
+        for ($i = 9; $i > 0; $i--) {
+            echo $i;
+        }
+
         echo rand(50,350)/1000;
         echo "It Works";
     })->name('homepage');
 
-    $app->get('/api/jauge', function() use ($app) {
+    $app->get('/api/jauge(:data+)', function() use ($app) {
         $app->response->headers->set('Content-Type', 'application/json');
         $app->response->headers->set('Access-Control-Allow-Origin', '*');
 
