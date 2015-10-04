@@ -22,6 +22,26 @@
 
     })->name("jauge");
 
+    $app->get('/api/postes/:compteEdfId', function($compteEdfId) use ($app) {
+        $postes = \Happster\Model\PosteQuery::create()
+            ->find();
+
+        $response = [];
+        foreach ($postes as $poste) {
+            $compteEdfPoste = \Happster\Model\CompteEdfPosteQuery::create()
+                ->findPkOrCreate([$compteEdfId, $poste->getId()]);
+
+            $response[] = [
+                $poste->toJSON(),
+                $compteEdfPoste->toJSON(),
+            ];
+
+        }
+        echo json_encode($response);
+
+
+    })->name('get_poste');
+
     $app->post('/api/poste', function() use ($app) {
         $compteEdfId    = $app->request->post('compte_edf_id');
         $posteId        = $app->request->post('poste_id');
@@ -42,7 +62,7 @@
         $compteEdfPoste->save();
 
         echo $compteEdfPoste->toJSON();
-    })->name('poste');
+    })->name('post_poste');
 
     $app->put('/api/poste', function() use ($app) {
         $compteEdfId    = $app->request->put('compte_edf_id');
@@ -62,7 +82,7 @@
         $compteEdfPoste->save();
 
         echo $compteEdfPoste->toJSON();
-    })->name('poste');
+    })->name('put_poste');
 
     $app->delete('/api/poste', function() use ($app) {
         $compteEdfId    = $app->request->delete('compte_edf_id');
@@ -78,7 +98,7 @@
         $compteEdfPoste->delete();
 
         echo json_encode("Poste ".$posteId." supprimé");
-    })->name('poste');
+    })->name('delete_poste');
 // fonction chris
     $app->get('/api/postes_conso', function() use ($app) {
 

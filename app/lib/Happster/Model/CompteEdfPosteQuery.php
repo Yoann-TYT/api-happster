@@ -18,4 +18,14 @@ use Happster\Model\om\BaseCompteEdfPosteQuery;
  */
 class CompteEdfPosteQuery extends BaseCompteEdfPosteQuery
 {
+    public function findPkOrCreate($key) {
+        $compteEdfPoste = \Happster\Model\CompteEdfPosteQuery::create()
+            ->findPK($key);
+
+        if (!$compteEdfPoste instanceof \Happster\Model\CompteEdfPoste) {
+            $compteEdfPoste = new \Happster\Model\CompteEdfPoste;
+        }
+
+        return $compteEdfPoste;
+    }
 }
