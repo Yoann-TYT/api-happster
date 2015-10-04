@@ -63,7 +63,7 @@ use Happster\Model\User;
  * @method Poste findOneOrCreate(PropelPDO $con = null) Return the first Poste matching the query, or a new Poste object populated from the query conditions when no match is found
  *
  * @method Poste findOneByNom(string $nom) Return the first Poste filtered by the nom column
- * @method Poste findOneByPuissanceMax(double $puissance_max) Return the first Poste filtered by the puissance_max column
+ * @method Poste findOneByPuissanceMax(int $puissance_max) Return the first Poste filtered by the puissance_max column
  * @method Poste findOneByReglagePossible(boolean $reglage_possible) Return the first Poste filtered by the reglage_possible column
  * @method Poste findOneByProducteur(boolean $producteur) Return the first Poste filtered by the producteur column
  * @method Poste findOneByCreatedBy(int $created_by) Return the first Poste filtered by the created_by column
@@ -73,7 +73,7 @@ use Happster\Model\User;
  *
  * @method array findById(int $id) Return Poste objects filtered by the id column
  * @method array findByNom(string $nom) Return Poste objects filtered by the nom column
- * @method array findByPuissanceMax(double $puissance_max) Return Poste objects filtered by the puissance_max column
+ * @method array findByPuissanceMax(int $puissance_max) Return Poste objects filtered by the puissance_max column
  * @method array findByReglagePossible(boolean $reglage_possible) Return Poste objects filtered by the reglage_possible column
  * @method array findByProducteur(boolean $producteur) Return Poste objects filtered by the producteur column
  * @method array findByCreatedBy(int $created_by) Return Poste objects filtered by the created_by column

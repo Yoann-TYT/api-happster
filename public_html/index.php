@@ -34,6 +34,8 @@ require_once __ROOT__.'/app/vendor/propel/propel1/runtime/lib/Propel.php';
 // Initialize Propel with the runtime configuration
 Propel::init(__ROOT__."/app/config/happster-conf.php");
 
+$app->response->headers->set('Content-Type', 'application/json');
+$app->response->headers->set('Access-Control-Allow-Origin', '*');
 require '../app/routes/routes.php';
 
 // Render

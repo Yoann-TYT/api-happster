@@ -44,7 +44,7 @@ class PosteTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('nom', 'Nom', 'VARCHAR', true, 255, null);
-        $this->addColumn('puissance_max', 'PuissanceMax', 'FLOAT', false, 10, null);
+        $this->addColumn('puissance_max', 'PuissanceMax', 'INTEGER', false, 10, null);
         $this->addColumn('reglage_possible', 'ReglagePossible', 'BOOLEAN', false, 1, null);
         $this->addColumn('producteur', 'Producteur', 'BOOLEAN', false, 1, false);
         $this->addForeignKey('created_by', 'CreatedBy', 'INTEGER', 'user', 'id', false, null, null);

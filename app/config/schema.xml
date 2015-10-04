@@ -55,14 +55,14 @@
     <table name="poste" phpName="Poste">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="nom" type="varchar" size="255" required="true"/>
-        <column name="puissance_max" type="float" size="10" scale="5"></column>
+        <column name="puissance_max" type="integer" size="10"></column>
         <column name="reglage_possible" type="boolean"></column>
         <column name="producteur" type="boolean" default="false"></column>
     </table>
     <table name="compte_edf_poste" phpName="CompteEdfPoste">
       <column name="compte_edf_id" type="INTEGER" primaryKey="true"/>
       <column name="poste_id" type="INTEGER" primaryKey="true"/>
-      <column name="puissance" type="float" size="10" scale="5"></column>
+      <column name="puissance" type="float" size="10"></column>
       <column name="time" type="timestamp"></column>
       <foreign-key foreignTable="compte_edf">
         <reference local="compte_edf_id" foreign="id"/>

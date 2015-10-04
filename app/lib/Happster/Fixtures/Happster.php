@@ -77,8 +77,32 @@ class Happster {
             $historique->save();
         }
 
+        $postes = [
+            'Radiateur' => 5 * 1500,
+            'Ballon 100L' => 2500,
+            'Réfrigérateur' => 200,
+            'Congélateur' => 275,
+            'Lave-vaisselle' => 1200,
+            'Lave-linge' => 2500,
+            'Sèche-linge' => 2500,
+            'Télévision LCD' => 150,
+            'Plaques de cuisson' => 9000,
+            'Micro-ondes' => 1000,
+            'Cafetière' => 750,
+            'Voiture' => 4500,
+            'Ordinateur' => 80,
+            'Aspirateur' => 700,
+            'Eclairage' => 100,
+        ];
 
-
+        foreach ($postes as $nom => $puissanceMax) {
+            $poste = new \Happster\Model\Poste;
+            $poste->setNom($nom);
+            $poste->setPuissanceMax($puissanceMax);
+            $poste->setReglagePossible(true);
+            $poste->setProducteur(false);
+            $poste->save();
+        }
 
     }
 

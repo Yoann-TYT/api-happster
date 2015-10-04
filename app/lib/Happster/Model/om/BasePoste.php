@@ -65,7 +65,7 @@ abstract class BasePoste extends BaseObject implements Persistent
 
     /**
      * The value for the puissance_max field.
-     * @var        double
+     * @var        int
      */
     protected $puissance_max;
 
@@ -194,7 +194,7 @@ abstract class BasePoste extends BaseObject implements Persistent
     /**
      * Get the [puissance_max] column value.
      *
-     * @return double
+     * @return int
      */
     public function getPuissanceMax()
     {
@@ -371,13 +371,13 @@ abstract class BasePoste extends BaseObject implements Persistent
     /**
      * Set the value of [puissance_max] column.
      *
-     * @param  double $v new value
+     * @param  int $v new value
      * @return Poste The current object (for fluent API support)
      */
     public function setPuissanceMax($v)
     {
         if ($v !== null && is_numeric($v)) {
-            $v = (double) $v;
+            $v = (int) $v;
         }
 
         if ($this->puissance_max !== $v) {
@@ -581,7 +581,7 @@ abstract class BasePoste extends BaseObject implements Persistent
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->nom = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->puissance_max = ($row[$startcol + 2] !== null) ? (double) $row[$startcol + 2] : null;
+            $this->puissance_max = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
             $this->reglage_possible = ($row[$startcol + 3] !== null) ? (boolean) $row[$startcol + 3] : null;
             $this->producteur = ($row[$startcol + 4] !== null) ? (boolean) $row[$startcol + 4] : null;
             $this->created_by = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
@@ -922,7 +922,7 @@ abstract class BasePoste extends BaseObject implements Persistent
                         $stmt->bindValue($identifier, $this->nom, PDO::PARAM_STR);
                         break;
                     case '`puissance_max`':
-                        $stmt->bindValue($identifier, $this->puissance_max, PDO::PARAM_STR);
+                        $stmt->bindValue($identifier, $this->puissance_max, PDO::PARAM_INT);
                         break;
                     case '`reglage_possible`':
                         $stmt->bindValue($identifier, (int) $this->reglage_possible, PDO::PARAM_INT);

@@ -14,9 +14,6 @@
     })->name('homepage');
 
     $app->get('/api/jauge(:data+)', function() use ($app) {
-        $app->response->headers->set('Content-Type', 'application/json');
-        $app->response->headers->set('Access-Control-Allow-Origin', '*');
-
         $response = [
             'value' => round(rand(0, 100)),
             'type'  => 'success',
@@ -25,10 +22,65 @@
 
     })->name("jauge");
 
+    $app->post('/api/poste', function() use ($app) {
+        $compteEdfId    = $app->request->post('compte_edf_id');
+        $posteId        = $app->request->post('poste_id');
+        $puissance      = $app->request->post('puissance');
+
+        $compteEdfPoste = \Happster\Model\CompteEdfPosteQuery::create()
+            ->findPk([$compteEdfId, $posteId]);
+
+        if ($compteEdfPoste instanceof \Happster\Model\CompteEdfPoste) {
+            $app->halt(409, json_encode('Ce poste a déjà été ajouté'));
+        }
+
+        $compteEdfPoste = new \Happster\Model\CompteEdfPoste();
+        $compteEdfPoste->setCompteEdfId($compteEdfId);
+        $compteEdfPoste->setPosteId($posteId);
+        $compteEdfPoste->setPuissance($puissance);
+        $compteEdfPoste->setTime(time());
+        $compteEdfPoste->save();
+
+        echo $compteEdfPoste->toJSON();
+    })->name('poste');
+
+    $app->put('/api/poste', function() use ($app) {
+        $compteEdfId    = $app->request->put('compte_edf_id');
+        $posteId        = $app->request->put('poste_id');
+        $puissance      = $app->request->put('puissance');
+
+
+        $compteEdfPoste = \Happster\Model\CompteEdfPosteQuery::create()
+            ->findPk([$compteEdfId, $posteId]);
+
+        if (!$compteEdfPoste instanceof \Happster\Model\CompteEdfPoste) {
+            $app->halt(409, json_encode("Ce poste n'existe pas en base de donnée"));
+        }
+
+        $compteEdfPoste->setPuissance($puissance);
+        $compteEdfPoste->setTime(time());
+        $compteEdfPoste->save();
+
+        echo $compteEdfPoste->toJSON();
+    })->name('poste');
+
+    $app->delete('/api/poste', function() use ($app) {
+        $compteEdfId    = $app->request->delete('compte_edf_id');
+        $posteId        = $app->request->delete('poste_id');
+
+        $compteEdfPoste = \Happster\Model\CompteEdfPosteQuery::create()
+            ->findPk([$compteEdfId, $posteId]);
+
+        if (!$compteEdfPoste instanceof \Happster\Model\CompteEdfPoste) {
+            $app->halt(409, json_encode("Ce poste n'existe pas en base de donnée"));
+        }
+
+        $compteEdfPoste->delete();
+
+        echo json_encode("Poste ".$posteId." supprimé");
+    })->name('poste');
 // fonction chris
     $app->get('/api/postes_conso', function() use ($app) {
-        $app->response->headers->set('Content-Type', 'application/json');
-        $app->response->headers->set('Access-Control-Allow-Origin', '*');
 
         $response = [
 	'Radiateur' => round(rand(0, 100)/100 * 1500),
