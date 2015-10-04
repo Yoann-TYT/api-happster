@@ -1,6 +1,5 @@
 # API Happster
 
-TEst deuxième PUSH
 You need to use composer to install this application.
 
 ```
